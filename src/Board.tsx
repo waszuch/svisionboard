@@ -1,10 +1,12 @@
-import React, { useState } from 'react';
-import "./style.css"
+import React, { useState, useEffect } from 'react';
+import "./style.css";
+
 interface BoardCell {
   color: string;
   border: string;
   zIndex?: number;
 }
+
 const Board: React.FC = () => {
   const [boardSize, setBoardSize] = useState<number>(64);
   const [diffX, setDiffX] = useState<number | null>(null);
@@ -12,10 +14,26 @@ const Board: React.FC = () => {
   const [leftBoard, setLeftBoard] = useState<string[]>([]);
   const [rightBoard, setRightBoard] = useState<BoardCell[]>([]);
   const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
+  const [windowWidth, setWindowWidth] = useState<number>(window.innerWidth);
+  const [windowHeight, setWindowHeight] = useState<number>(window.innerHeight);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setWindowWidth(window.innerWidth);
+      setWindowHeight(window.innerHeight);
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
+
   const getRandomColor = (): string => {
     const colors = ['#FFFFFF', '#FF0000', '#00FF00', '#0000FF', '#FFA500', '#FFFF00'];
     return colors[Math.floor(Math.random() * colors.length)];
   };
+
   const generateBoards = (size: number) => {
     const newLeftBoard: string[] = [];
     const newRightBoard: BoardCell[] = [];
@@ -23,10 +41,12 @@ const Board: React.FC = () => {
     const newDiffY = Math.floor(Math.random() * size);
     setDiffX(newDiffX);
     setDiffY(newDiffY);
+
     for (let y = 0; y < size; y++) {
       for (let x = 0; x < size; x++) {
         const color = getRandomColor();
         newLeftBoard.push(color);
+
         if (x === newDiffX && y === newDiffY) {
           let differentColor;
           do {
@@ -41,6 +61,7 @@ const Board: React.FC = () => {
     setLeftBoard(newLeftBoard);
     setRightBoard(newRightBoard);
   };
+
   const showDifference = () => {
     if (diffX !== null && diffY !== null) {
       const index = diffY * boardSize + diffX;
@@ -49,15 +70,23 @@ const Board: React.FC = () => {
       setRightBoard(newRightBoard);
     }
   };
+
   const handleBoardSizeChange = (size: number) => {
     setBoardSize(size);
     generateBoards(size);
     setIsDropdownOpen(false);
   };
+
+  // Ustalanie rozmiaru planszy zależnie od orientacji ekranu i wielkości
+  const isPortrait = windowHeight > windowWidth;
+  const squareSize = isPortrait
+    ? Math.min(windowWidth * 0.8, 320) / boardSize
+    : Math.min(windowHeight * 0.8, 320) / boardSize;
+
+  // Inicjalne generowanie planszy
   if (leftBoard.length === 0 && rightBoard.length === 0) {
     generateBoards(boardSize);
   }
-  const squareSize = window.innerWidth < 640 ? 160 / boardSize : 640 / boardSize;
 
   return (
     <div className="flex flex-col items-center justify-center h-screen bg-gradient-to-b from-[#010758] to-[#490d61] text-white font-sans">
@@ -68,8 +97,8 @@ const Board: React.FC = () => {
           style={{
             gridTemplateColumns: `repeat(${boardSize}, ${squareSize}px)`,
             gridTemplateRows: `repeat(${boardSize}, ${squareSize}px)`,
-            width: window.innerWidth < 640 ? "160px" : "640px",  // Zmiana rozmiaru plansz
-            height: window.innerWidth < 640 ? "160px" : "640px",
+            width: `${squareSize * boardSize}px`,
+            height: `${squareSize * boardSize}px`,
           }}
         >
           {leftBoard.map((color, index) => (
@@ -82,8 +111,8 @@ const Board: React.FC = () => {
           style={{
             gridTemplateColumns: `repeat(${boardSize}, ${squareSize}px)`,
             gridTemplateRows: `repeat(${boardSize}, ${squareSize}px)`,
-            width: window.innerWidth < 640 ? "160px" : "640px",  // Zmiana rozmiaru plansz
-            height: window.innerWidth < 640 ? "160px" : "640px",
+            width: `${squareSize * boardSize}px`,
+            height: `${squareSize * boardSize}px`,
           }}
         >
           {rightBoard.map((cell, index) => (
@@ -165,4 +194,5 @@ const Board: React.FC = () => {
     </div>
   );
 };
+
 export default Board;

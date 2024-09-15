@@ -77,11 +77,16 @@ const Board: React.FC = () => {
     setIsDropdownOpen(false);
   };
 
-  // Obliczanie minimalnej wartości dla rozmiaru kwadratów planszy
-  const squareSize = Math.min(
-    Math.min(windowWidth, windowHeight) * 0.8 / boardSize, // Skala zależna od mniejszego wymiaru (szerokość/wysokość)
-    30 // Maksymalny rozmiar każdego kwadratu (możesz zmienić w zależności od potrzeb)
-  );
+  // Warunek: jeżeli urządzenie jest w trybie pionowym i szerokość jest mniejsza niż np. 640px (telefon)
+  const isPortraitOnMobile = windowWidth < 640 && windowHeight > windowWidth;
+
+  // Jeżeli orientacja jest pionowa na telefonie, ustaw rozmiar planszy na 160x160
+  const squareSize = isPortraitOnMobile
+    ? 160 / boardSize // Każdy kwadrat będzie skalowany do planszy o rozmiarze 160x160 px
+    : Math.min(
+        Math.min(windowWidth, windowHeight) * 0.8 / boardSize, // Normalna skala na większych urządzeniach
+        30 // Maksymalny rozmiar każdego kwadratu
+      );
 
   // Inicjalne generowanie planszy
   if (leftBoard.length === 0 && rightBoard.length === 0) {

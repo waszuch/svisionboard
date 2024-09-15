@@ -77,11 +77,11 @@ const Board: React.FC = () => {
     setIsDropdownOpen(false);
   };
 
-  // Ustalanie rozmiaru planszy zależnie od orientacji ekranu i wielkości
-  const isPortrait = windowHeight > windowWidth;
-  const squareSize = isPortrait
-    ? Math.min(windowWidth * 0.8, 320) / boardSize
-    : Math.min(windowHeight * 0.8, 320) / boardSize;
+  // Obliczanie minimalnej wartości dla rozmiaru kwadratów planszy
+  const squareSize = Math.min(
+    Math.min(windowWidth, windowHeight) * 0.8 / boardSize, // Skala zależna od mniejszego wymiaru (szerokość/wysokość)
+    30 // Maksymalny rozmiar każdego kwadratu (możesz zmienić w zależności od potrzeb)
+  );
 
   // Inicjalne generowanie planszy
   if (leftBoard.length === 0 && rightBoard.length === 0) {

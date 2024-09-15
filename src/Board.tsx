@@ -67,7 +67,7 @@ const Board: React.FC = () => {
     if (diffX !== null && diffY !== null) {
       const index = diffY * boardSize + diffX;
   
-      // Dodaj animację do komórki
+    
       const animatedCell = document.getElementById(`right-cell-${index}`);
       if (animatedCell) {
         animatedCell.classList.add('pulse'); 

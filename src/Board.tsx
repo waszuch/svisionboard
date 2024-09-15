@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Button } from "@/components/ui/button"
 import "./style.css";
 
 interface BoardCell {
@@ -65,40 +66,48 @@ const Board: React.FC = () => {
   const showDifference = () => {
     if (diffX !== null && diffY !== null) {
       const index = diffY * boardSize + diffX;
-      const newRightBoard = [...rightBoard];
-      newRightBoard[index] = { ...newRightBoard[index], border: '4px solid black', zIndex: 1 };
-      setRightBoard(newRightBoard);
+  
+      // Dodaj animację do komórki
+      const animatedCell = document.getElementById(`right-cell-${index}`);
+      if (animatedCell) {
+        animatedCell.classList.add('pulse'); 
+  
+        
+        setTimeout(() => {
+          animatedCell.classList.remove('pulse');
+        }, 2000);
+      }
     }
   };
-
   const handleBoardSizeChange = (size: number) => {
     setBoardSize(size);
     generateBoards(size);
     setIsDropdownOpen(false);
   };
 
-  // Warunek: jeżeli urządzenie jest w trybie pionowym i szerokość jest mniejsza niż np. 640px (telefon)
+  
   const isPortraitOnMobile = windowWidth < 640 && windowHeight > windowWidth;
 
-  // Jeżeli orientacja jest pionowa na telefonie, ustaw rozmiar planszy na 160x160
+ 
   const squareSize = isPortraitOnMobile
-    ? 160 / boardSize // Każdy kwadrat będzie skalowany do planszy o rozmiarze 160x160 px
+    ? 160 / boardSize 
     : Math.min(
-        Math.min(windowWidth, windowHeight) * 0.8 / boardSize, // Normalna skala na większych urządzeniach
-        30 // Maksymalny rozmiar każdego kwadratu
+        Math.min(windowWidth, windowHeight) * 0.8 / boardSize, 
+        30 
       );
 
-  // Inicjalne generowanie planszy
+ 
   if (leftBoard.length === 0 && rightBoard.length === 0) {
     generateBoards(boardSize);
   }
 
   return (
     <div className="flex flex-col items-center justify-center h-screen bg-gradient-to-b from-[#010758] to-[#490d61] text-white font-sans">
-      <div className="flex flex-row gap-2">
+      <div className="flex flex-row gap-5">
         <div
-          id="left-board"
-          className="grid border-1 border-white bg-gray-800"
+       id="left-board"
+       className="grid border-3 border-black bg-gray-800"
+       
           style={{
             gridTemplateColumns: `repeat(${boardSize}, ${squareSize}px)`,
             gridTemplateRows: `repeat(${boardSize}, ${squareSize}px)`,
@@ -107,12 +116,12 @@ const Board: React.FC = () => {
           }}
         >
           {leftBoard.map((color, index) => (
-            <div key={index} style={{ backgroundColor: color, width: squareSize, height: squareSize }} />
+            <div key={index} style={{ backgroundColor: color, width: squareSize, height: squareSize,border: '1px solid black',  }} />
           ))}
         </div>
         <div
           id="right-board"
-          className="grid border-1 border-white bg-gray-800"
+       className="grid border-3 border-black bg-gray-800"
           style={{
             gridTemplateColumns: `repeat(${boardSize}, ${squareSize}px)`,
             gridTemplateRows: `repeat(${boardSize}, ${squareSize}px)`,
@@ -122,34 +131,43 @@ const Board: React.FC = () => {
         >
           {rightBoard.map((cell, index) => (
             <div
-              key={index}
-              style={{ backgroundColor: cell.color, border: cell.border, width: squareSize, height: squareSize }}
+            id={`right-cell-${index}`} 
+            key={index}
+            className="cell" 
+            style={{
+              backgroundColor: cell.color,
+              width: squareSize,
+              height: squareSize,
+              border: '1px solid black', 
+            }}
             />
           ))}
         </div>
       </div>
       <div className="mt-5">
-        <button
+        <Button
           onClick={() => generateBoards(boardSize)}
-          className="mx-2 px-5 py-2 text-lg sm:text-base sm:px-3 sm:py-1 cursor-pointer bg-[#620d91] text-white rounded transition-colors duration-300 hover:bg-[#7c27ab]"
+          className="mx-5 px-5 py-2 text-lg sm:text-base sm:px-3 sm:py-1 cursor-pointer bg-[#620d91] text-white rounded transition-colors duration-300 hover:bg-[#7c27ab]"
+         
         >
           Generate Board
-        </button>
-        <button
+        </Button>
+        <Button
           onClick={showDifference}
-          className="mx-2 px-5 py-2 text-lg sm:text-base sm:px-3 sm:py-1 cursor-pointer bg-[#620d91] text-white rounded transition-colors duration-300 hover:bg-[#7c27ab]"
+          className="mx-3 px-5 py-2 text-lg sm:text-base sm:px-3 sm:py-1 cursor-pointer bg-[#620d91] text-white rounded transition-colors duration-300 hover:bg-[#7c27ab]"
+          
         >
           Show Differences
-        </button>
+        </Button>
       </div>
       <div className="fixed top-2 right-2">
         <div className="relative">
-          <button
+          <Button
             onClick={() => setIsDropdownOpen(!isDropdownOpen)}
             className="mx-2 px-5 py-2 text-lg sm:text-base sm:px-3 sm:py-1 cursor-pointer bg-[#620d91] text-white rounded transition-colors duration-300 hover:bg-[#7c27ab]"
           >
             Board Size
-          </button>
+          </Button>
           {isDropdownOpen && (
             <div className="absolute right-0 mt-2 bg-pink-600 shadow-lg">
               <a

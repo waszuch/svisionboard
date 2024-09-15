@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import "./style.css";
 
 interface BoardCell {
   color: string;
@@ -14,7 +13,6 @@ const Board: React.FC = () => {
   const [leftBoard, setLeftBoard] = useState<string[]>([]);
   const [rightBoard, setRightBoard] = useState<BoardCell[]>([]);
   const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
-  const [isLandscape, setIsLandscape] = useState<boolean>(window.innerWidth > window.innerHeight);
 
   const getRandomColor = (): string => {
     const colors = ['#FFFFFF', '#FF0000', '#00FF00', '#0000FF', '#FFA500', '#FFFF00'];
@@ -68,57 +66,44 @@ const Board: React.FC = () => {
   };
 
   useEffect(() => {
-    const handleResize = () => {
-      setIsLandscape(window.innerWidth > window.innerHeight);
-    };
+    if (leftBoard.length === 0 && rightBoard.length === 0) {
+      generateBoards(boardSize);
+    }
+  }, [leftBoard, rightBoard, boardSize]);
 
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
 
-  if (leftBoard.length === 0 && rightBoard.length === 0) {
-    generateBoards(boardSize);
-  }
-
-  // Zmieniamy rozmiary w zależności od orientacji
-  const squareSize = isLandscape
-    ? window.innerWidth < 640 ? 165 / boardSize : 645 / boardSize  // Landscape: minimalnie większe
-    : window.innerWidth < 640 ? 160 / boardSize : 640 / boardSize; // Portrait: standardowe
-
-  const boardDimension = isLandscape ? (window.innerWidth < 640 ? "165px" : "645px") : (window.innerWidth < 640 ? "160px" : "640px");
+  const squareSizeClass = window.innerWidth < 640 ? "w-[6px] h-[6px]" : "w-[10px] h-[10px]";
+  const boardSizeClass = window.innerWidth < 640 ? "w-[160px] h-[160px]" : "w-[645px] h-[645px]";
 
   return (
     <div className="flex flex-col items-center justify-center h-screen bg-gradient-to-b from-[#010758] to-[#490d61] text-white font-sans">
       <div className="flex flex-row gap-2">
         <div
           id="left-board"
-          className="grid border-1 border-white bg-gray-800"
+          className={`grid border-1 border-white bg-gray-800 ${boardSizeClass}`}
           style={{
-            gridTemplateColumns: `repeat(${boardSize}, ${squareSize}px)`,
-            gridTemplateRows: `repeat(${boardSize}, ${squareSize}px)`,
-            width: boardDimension,  // Zmieniona szerokość planszy
-            height: boardDimension, // Zmieniona wysokość planszy
+            gridTemplateColumns: `repeat(${boardSize}, minmax(0, 1fr))`,
+            gridTemplateRows: `repeat(${boardSize}, minmax(0, 1fr))`,
           }}
         >
           {leftBoard.map((color, index) => (
-            <div key={index} style={{ backgroundColor: color, width: squareSize, height: squareSize }} />
+            <div key={index} className={squareSizeClass} style={{ backgroundColor: color }} />
           ))}
         </div>
 
         <div
           id="right-board"
-          className="grid border-1 border-white bg-gray-800"
+          className={`grid border-1 border-white bg-gray-800 ${boardSizeClass}`}
           style={{
-            gridTemplateColumns: `repeat(${boardSize}, ${squareSize}px)`,
-            gridTemplateRows: `repeat(${boardSize}, ${squareSize}px)`,
-            width: boardDimension,  // Zmieniona szerokość planszy
-            height: boardDimension, // Zmieniona wysokość planszy
+            gridTemplateColumns: `repeat(${boardSize}, minmax(0, 1fr))`,
+            gridTemplateRows: `repeat(${boardSize}, minmax(0, 1fr))`,
           }}
         >
           {rightBoard.map((cell, index) => (
             <div
               key={index}
-              style={{ backgroundColor: cell.color, border: cell.border, width: squareSize, height: squareSize }}
+              className={squareSizeClass}
+              style={{ backgroundColor: cell.color, border: cell.border }}
             />
           ))}
         </div>
@@ -128,18 +113,12 @@ const Board: React.FC = () => {
         <button
           onClick={() => generateBoards(boardSize)}
           className="mx-2 px-5 py-2 text-lg sm:text-base sm:px-3 sm:py-1 cursor-pointer bg-[#620d91] text-white rounded transition-colors duration-300 hover:bg-[#7c27ab]"
-          style={{
-            padding: isLandscape ? '12px 22px' : '10px 20px', // Zmienione paddingi dla landscape
-          }}
         >
           Generate Board
         </button>
         <button
           onClick={showDifference}
           className="mx-2 px-5 py-2 text-lg sm:text-base sm:px-3 sm:py-1 cursor-pointer bg-[#620d91] text-white rounded transition-colors duration-300 hover:bg-[#7c27ab]"
-          style={{
-            padding: isLandscape ? '12px 22px' : '10px 20px', // Zmienione paddingi dla landscape
-          }}
         >
           Show Differences
         </button>

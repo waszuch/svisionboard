@@ -1,11 +1,10 @@
-import React, { useState, useEffect } from 'react';
-
+import React, { useState } from 'react';
+import "./style.css"
 interface BoardCell {
   color: string;
   border: string;
   zIndex?: number;
 }
-
 const Board: React.FC = () => {
   const [boardSize, setBoardSize] = useState<number>(64);
   const [diffX, setDiffX] = useState<number | null>(null);
@@ -13,27 +12,21 @@ const Board: React.FC = () => {
   const [leftBoard, setLeftBoard] = useState<string[]>([]);
   const [rightBoard, setRightBoard] = useState<BoardCell[]>([]);
   const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
-
   const getRandomColor = (): string => {
     const colors = ['#FFFFFF', '#FF0000', '#00FF00', '#0000FF', '#FFA500', '#FFFF00'];
     return colors[Math.floor(Math.random() * colors.length)];
   };
-
   const generateBoards = (size: number) => {
     const newLeftBoard: string[] = [];
     const newRightBoard: BoardCell[] = [];
-
     const newDiffX = Math.floor(Math.random() * size);
     const newDiffY = Math.floor(Math.random() * size);
-
     setDiffX(newDiffX);
     setDiffY(newDiffY);
-
     for (let y = 0; y < size; y++) {
       for (let x = 0; x < size; x++) {
         const color = getRandomColor();
         newLeftBoard.push(color);
-
         if (x === newDiffX && y === newDiffY) {
           let differentColor;
           do {
@@ -45,11 +38,9 @@ const Board: React.FC = () => {
         }
       }
     }
-
     setLeftBoard(newLeftBoard);
     setRightBoard(newRightBoard);
   };
-
   const showDifference = () => {
     if (diffX !== null && diffY !== null) {
       const index = diffY * boardSize + diffX;
@@ -58,57 +49,51 @@ const Board: React.FC = () => {
       setRightBoard(newRightBoard);
     }
   };
-
   const handleBoardSizeChange = (size: number) => {
     setBoardSize(size);
     generateBoards(size);
     setIsDropdownOpen(false);
   };
-
-  useEffect(() => {
-    if (leftBoard.length === 0 && rightBoard.length === 0) {
-      generateBoards(boardSize);
-    }
-  }, [leftBoard, rightBoard, boardSize]);
-
-
-  const squareSizeClass = window.innerWidth < 640 ? "w-[6px] h-[6px]" : "w-[10px] h-[10px]";
-  const boardSizeClass = window.innerWidth < 640 ? "w-[160px] h-[160px]" : "w-[645px] h-[645px]";
+  if (leftBoard.length === 0 && rightBoard.length === 0) {
+    generateBoards(boardSize);
+  }
+  const squareSize = window.innerWidth < 640 ? 160 / boardSize : 640 / boardSize;
 
   return (
     <div className="flex flex-col items-center justify-center h-screen bg-gradient-to-b from-[#010758] to-[#490d61] text-white font-sans">
       <div className="flex flex-row gap-2">
         <div
           id="left-board"
-          className={`grid border-1 border-white bg-gray-800 ${boardSizeClass}`}
+          className="grid border-1 border-white bg-gray-800"
           style={{
-            gridTemplateColumns: `repeat(${boardSize}, minmax(0, 1fr))`,
-            gridTemplateRows: `repeat(${boardSize}, minmax(0, 1fr))`,
+            gridTemplateColumns: `repeat(${boardSize}, ${squareSize}px)`,
+            gridTemplateRows: `repeat(${boardSize}, ${squareSize}px)`,
+            width: window.innerWidth < 640 ? "160px" : "640px",  // Zmiana rozmiaru plansz
+            height: window.innerWidth < 640 ? "160px" : "640px",
           }}
         >
           {leftBoard.map((color, index) => (
-            <div key={index} className={squareSizeClass} style={{ backgroundColor: color }} />
+            <div key={index} style={{ backgroundColor: color, width: squareSize, height: squareSize }} />
           ))}
         </div>
-
         <div
           id="right-board"
-          className={`grid border-1 border-white bg-gray-800 ${boardSizeClass}`}
+          className="grid border-1 border-white bg-gray-800"
           style={{
-            gridTemplateColumns: `repeat(${boardSize}, minmax(0, 1fr))`,
-            gridTemplateRows: `repeat(${boardSize}, minmax(0, 1fr))`,
+            gridTemplateColumns: `repeat(${boardSize}, ${squareSize}px)`,
+            gridTemplateRows: `repeat(${boardSize}, ${squareSize}px)`,
+            width: window.innerWidth < 640 ? "160px" : "640px",  // Zmiana rozmiaru plansz
+            height: window.innerWidth < 640 ? "160px" : "640px",
           }}
         >
           {rightBoard.map((cell, index) => (
             <div
               key={index}
-              className={squareSizeClass}
-              style={{ backgroundColor: cell.color, border: cell.border }}
+              style={{ backgroundColor: cell.color, border: cell.border, width: squareSize, height: squareSize }}
             />
           ))}
         </div>
       </div>
-
       <div className="mt-5">
         <button
           onClick={() => generateBoards(boardSize)}
@@ -123,7 +108,6 @@ const Board: React.FC = () => {
           Show Differences
         </button>
       </div>
-
       <div className="fixed top-2 right-2">
         <div className="relative">
           <button
@@ -181,5 +165,4 @@ const Board: React.FC = () => {
     </div>
   );
 };
-
 export default Board;

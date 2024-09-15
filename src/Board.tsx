@@ -71,7 +71,7 @@ const Board: React.FC = () => {
   }
 
   // Warunkowe wartości dla squareSize w zależności od wielkości ekranu
-  const squareSize = window.innerWidth < 640 ? 320 / boardSize : 640 / boardSize; 
+  const squareSize = window.innerWidth < 640 ? 160 / boardSize : 640 / boardSize;
 
   return (
     <div className="flex flex-col items-center justify-center h-screen bg-gradient-to-b from-[#010758] to-[#490d61] text-white font-sans">
@@ -82,8 +82,8 @@ const Board: React.FC = () => {
           style={{
             gridTemplateColumns: `repeat(${boardSize}, ${squareSize}px)`,
             gridTemplateRows: `repeat(${boardSize}, ${squareSize}px)`,
-            width: window.innerWidth < 640 ? "320px" : "640px",  // Zmiana rozmiaru plansz
-            height: window.innerWidth < 640 ? "320px" : "640px",
+            width: window.innerWidth < 640 ? "160px" : "640px",  // Zmiana rozmiaru plansz
+            height: window.innerWidth < 640 ? "160px" : "640px",
           }}
         >
           {leftBoard.map((color, index) => (
@@ -97,8 +97,8 @@ const Board: React.FC = () => {
           style={{
             gridTemplateColumns: `repeat(${boardSize}, ${squareSize}px)`,
             gridTemplateRows: `repeat(${boardSize}, ${squareSize}px)`,
-            width: window.innerWidth < 640 ? "320px" : "640px",  // Zmiana rozmiaru plansz
-            height: window.innerWidth < 640 ? "320px" : "640px",
+            width: window.innerWidth < 640 ? "160px" : "640px",  // Zmiana rozmiaru plansz
+            height: window.innerWidth < 640 ? "160px" : "640px",
           }}
         >
           {rightBoard.map((cell, index) => (

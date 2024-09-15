@@ -66,119 +66,117 @@ const Board: React.FC = () => {
     setIsDropdownOpen(false);
   };
 
-  
   if (leftBoard.length === 0 && rightBoard.length === 0) {
     generateBoards(boardSize);
   }
 
-  const squareSize = 640 / boardSize;
+  // Warunkowe wartości dla squareSize w zależności od wielkości ekranu
+  const squareSize = window.innerWidth < 640 ? 320 / boardSize : 640 / boardSize; 
 
   return (
     <div className="flex flex-col items-center justify-center h-screen bg-gradient-to-b from-[#010758] to-[#490d61] text-white font-sans">
-      <div className="flex flex-col items-center gap-5">
-        <div className="flex gap-5">
-          <div
-            id="left-board"
-            className={`grid border-1 border-white bg-gray-800`}
-            style={{
-              gridTemplateColumns: `repeat(${boardSize}, ${squareSize}px)`,
-              gridTemplateRows: `repeat(${boardSize}, ${squareSize}px)`,
-              width: 640,
-              height: 640,
-            }}
-          >
-            {leftBoard.map((color, index) => (
-              <div key={index} style={{ backgroundColor: color, width: squareSize, height: squareSize }} />
-            ))}
-          </div>
-
-          <div
-            id="right-board"
-            className={`grid border-1 border-white bg-gray-800`}
-            style={{
-              gridTemplateColumns: `repeat(${boardSize}, ${squareSize}px)`,
-              gridTemplateRows: `repeat(${boardSize}, ${squareSize}px)`,
-              width: 640,
-              height: 640,
-            }}
-          >
-            {rightBoard.map((cell, index) => (
-              <div
-                key={index}
-                style={{ backgroundColor: cell.color, border: cell.border, width: squareSize, height: squareSize }}
-              />
-            ))}
-          </div>
+      <div className="flex flex-row gap-2">
+        <div
+          id="left-board"
+          className="grid border-1 border-white bg-gray-800"
+          style={{
+            gridTemplateColumns: `repeat(${boardSize}, ${squareSize}px)`,
+            gridTemplateRows: `repeat(${boardSize}, ${squareSize}px)`,
+            width: window.innerWidth < 640 ? "320px" : "640px",  // Zmiana rozmiaru plansz
+            height: window.innerWidth < 640 ? "320px" : "640px",
+          }}
+        >
+          {leftBoard.map((color, index) => (
+            <div key={index} style={{ backgroundColor: color, width: squareSize, height: squareSize }} />
+          ))}
         </div>
 
-        <div className="mt-5">
-          <button
-            onClick={() => generateBoards(boardSize)}
-            className="mx-2 px-5 py-2 text-lg cursor-pointer bg-[#620d91] text-white rounded transition-colors duration-300 hover:bg-[#7c27ab]"
-          >
-            Generate Board
-          </button>
-          <button
-            onClick={showDifference}
-            className="mx-2 px-5 py-2 text-lg cursor-pointer bg-[#620d91] text-white rounded transition-colors duration-300 hover:bg-[#7c27ab]"
-          >
-            Show Differences
-          </button>
+        <div
+          id="right-board"
+          className="grid border-1 border-white bg-gray-800"
+          style={{
+            gridTemplateColumns: `repeat(${boardSize}, ${squareSize}px)`,
+            gridTemplateRows: `repeat(${boardSize}, ${squareSize}px)`,
+            width: window.innerWidth < 640 ? "320px" : "640px",  // Zmiana rozmiaru plansz
+            height: window.innerWidth < 640 ? "320px" : "640px",
+          }}
+        >
+          {rightBoard.map((cell, index) => (
+            <div
+              key={index}
+              style={{ backgroundColor: cell.color, border: cell.border, width: squareSize, height: squareSize }}
+            />
+          ))}
         </div>
+      </div>
 
-        <div className="fixed top-2 right-2">
-          <div className="relative">
-            <button
-              onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-              className="mx-2 px-5 py-2 text-lg cursor-pointer bg-[#620d91] text-white rounded transition-colors duration-300 hover:bg-[#7c27ab]"
-            >
-              Board Size
-            </button>
-            {isDropdownOpen && (
-              <div className="absolute right-0 mt-2 bg-pink-600 shadow-lg">
-                <a
-                  href="#"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    handleBoardSizeChange(24);
-                  }}
-                  className="block text-white no-underline px-4 py-2 hover:bg-pink-500"
-                >
-                  24x24
-                </a>
-                <a
-                  href="#"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    handleBoardSizeChange(32);
-                  }}
-                  className="block text-white no-underline px-4 py-2 hover:bg-pink-500"
-                >
-                  32x32
-                </a>
-                <a
-                  href="#"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    handleBoardSizeChange(40);
-                  }}
-                  className="block text-white no-underline px-4 py-2 hover:bg-pink-500"
-                >
-                  40x40
-                </a>
-                <a
-                  href="#"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    handleBoardSizeChange(48);
-                  }}
-                  className="block text-white no-underline px-4 py-2 hover:bg-pink-500"
-                >
-                  48x48
-                </a>
-              </div>
-            )}
-          </div>
+      <div className="mt-5">
+        <button
+          onClick={() => generateBoards(boardSize)}
+          className="mx-2 px-5 py-2 text-lg sm:text-base sm:px-3 sm:py-1 cursor-pointer bg-[#620d91] text-white rounded transition-colors duration-300 hover:bg-[#7c27ab]"
+        >
+          Generate Board
+        </button>
+        <button
+          onClick={showDifference}
+          className="mx-2 px-5 py-2 text-lg sm:text-base sm:px-3 sm:py-1 cursor-pointer bg-[#620d91] text-white rounded transition-colors duration-300 hover:bg-[#7c27ab]"
+        >
+          Show Differences
+        </button>
+      </div>
+
+      <div className="fixed top-2 right-2">
+        <div className="relative">
+          <button
+            onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+            className="mx-2 px-5 py-2 text-lg sm:text-base sm:px-3 sm:py-1 cursor-pointer bg-[#620d91] text-white rounded transition-colors duration-300 hover:bg-[#7c27ab]"
+          >
+            Board Size
+          </button>
+          {isDropdownOpen && (
+            <div className="absolute right-0 mt-2 bg-pink-600 shadow-lg">
+              <a
+                href="#"
+                onClick={(e) => {
+                  e.preventDefault();
+                  handleBoardSizeChange(24);
+                }}
+                className="block text-white no-underline px-4 py-2 hover:bg-pink-500"
+              >
+                24x24
+              </a>
+              <a
+                href="#"
+                onClick={(e) => {
+                  e.preventDefault();
+                  handleBoardSizeChange(32);
+                }}
+                className="block text-white no-underline px-4 py-2 hover:bg-pink-500"
+              >
+                32x32
+              </a>
+              <a
+                href="#"
+                onClick={(e) => {
+                  e.preventDefault();
+                  handleBoardSizeChange(40);
+                }}
+                className="block text-white no-underline px-4 py-2 hover:bg-pink-500"
+              >
+                40x40
+              </a>
+              <a
+                href="#"
+                onClick={(e) => {
+                  e.preventDefault();
+                  handleBoardSizeChange(48);
+                }}
+                className="block text-white no-underline px-4 py-2 hover:bg-pink-500"
+              >
+                48x48
+              </a>
+            </div>
+          )}
         </div>
       </div>
     </div>

@@ -15,6 +15,8 @@ const Board: React.FC = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
   const [windowWidth, setWindowWidth] = useState<number>(window.innerWidth);
   const [windowHeight, setWindowHeight] = useState<number>(window.innerHeight);
+  const [message, setMessage] = useState<string>('');
+
   useEffect(() => {
     const handleResize = () => {
       setWindowWidth(window.innerWidth);
@@ -59,11 +61,12 @@ const Board: React.FC = () => {
       const index = diffY * boardSize + diffX;
       const animatedCell = document.getElementById(`right-cell-${index}`);
       if (animatedCell) {
-        animatedCell.classList.add('pulse'); 
-  
+        animatedCell.classList.add('pulse');
+        setMessage(`The different square is number ${index + 1}`);
         
         setTimeout(() => {
           animatedCell.classList.remove('pulse');
+          setMessage('');
         }, 2000);
       }
     }
@@ -129,6 +132,8 @@ const Board: React.FC = () => {
           ))}
         </div>
       </div>
+      <div className="mt-2 text-xl font-bold">{message}</div>
+
       <div className="mt-5">
         <Button
           onClick={() => generateBoards(boardSize)}
@@ -203,3 +208,5 @@ const Board: React.FC = () => {
   );
 };
 export default Board;
+
+

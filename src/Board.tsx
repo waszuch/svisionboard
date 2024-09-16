@@ -1,13 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button"
 import "./style.css";
-
 interface BoardCell {
   color: string;
   border: string;
   zIndex?: number;
 }
-
 const Board: React.FC = () => {
   const [boardSize, setBoardSize] = useState<number>(64);
   const [diffX, setDiffX] = useState<number | null>(null);
@@ -17,24 +15,20 @@ const Board: React.FC = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
   const [windowWidth, setWindowWidth] = useState<number>(window.innerWidth);
   const [windowHeight, setWindowHeight] = useState<number>(window.innerHeight);
-
   useEffect(() => {
     const handleResize = () => {
       setWindowWidth(window.innerWidth);
       setWindowHeight(window.innerHeight);
     };
-
     window.addEventListener('resize', handleResize);
     return () => {
       window.removeEventListener('resize', handleResize);
     };
   }, []);
-
   const getRandomColor = (): string => {
     const colors = ['#FFFFFF', '#FF0000', '#00FF00', '#0000FF', '#FFA500', '#FFFF00'];
     return colors[Math.floor(Math.random() * colors.length)];
   };
-
   const generateBoards = (size: number) => {
     const newLeftBoard: string[] = [];
     const newRightBoard: BoardCell[] = [];
@@ -42,12 +36,10 @@ const Board: React.FC = () => {
     const newDiffY = Math.floor(Math.random() * size);
     setDiffX(newDiffX);
     setDiffY(newDiffY);
-
     for (let y = 0; y < size; y++) {
       for (let x = 0; x < size; x++) {
         const color = getRandomColor();
         newLeftBoard.push(color);
-
         if (x === newDiffX && y === newDiffY) {
           let differentColor;
           do {
@@ -62,12 +54,9 @@ const Board: React.FC = () => {
     setLeftBoard(newLeftBoard);
     setRightBoard(newRightBoard);
   };
-
   const showDifference = () => {
     if (diffX !== null && diffY !== null) {
       const index = diffY * boardSize + diffX;
-  
-    
       const animatedCell = document.getElementById(`right-cell-${index}`);
       if (animatedCell) {
         animatedCell.classList.add('pulse'); 
@@ -84,10 +73,8 @@ const Board: React.FC = () => {
     generateBoards(size);
     setIsDropdownOpen(false);
   };
-
   
   const isPortraitOnMobile = windowWidth < 640 && windowHeight > windowWidth;
-
  
   const squareSize = isPortraitOnMobile
     ? 160 / boardSize 
@@ -95,12 +82,10 @@ const Board: React.FC = () => {
         Math.min(windowWidth, windowHeight) * 0.8 / boardSize, 
         30 
       );
-
  
   if (leftBoard.length === 0 && rightBoard.length === 0) {
     generateBoards(boardSize);
   }
-
   return (
     <div className="flex flex-col items-center justify-center h-screen bg-gradient-to-b from-[#010758] to-[#490d61] text-white font-sans">
       <div className="flex flex-row gap-5">
@@ -116,27 +101,7 @@ const Board: React.FC = () => {
           }}
         >
           {leftBoard.map((color, index) => (
-            <div 
-              key={index} 
-              style={{ 
-                backgroundColor: color, 
-                width: squareSize, 
-                height: squareSize,
-                border: '1px solid black',
-                position: 'relative',
-              }}
-            >
-              <span style={{
-                position: 'absolute',
-                top: '2px',
-                left: '2px',
-                fontSize: `${squareSize / 3}px`,
-                color: 'black',
-                textShadow: '0 0 2px white',
-              }}>
-                {index + 1}
-              </span>
-            </div>
+            <div key={index} style={{ backgroundColor: color, width: squareSize, height: squareSize,border: '1px solid black',  }} />
           ))}
         </div>
         <div
@@ -151,28 +116,16 @@ const Board: React.FC = () => {
         >
           {rightBoard.map((cell, index) => (
             <div
-              id={`right-cell-${index}`} 
-              key={index}
-              className="cell" 
-              style={{
-                backgroundColor: cell.color,
-                width: squareSize,
-                height: squareSize,
-                border: '1px solid black',
-                position: 'relative',
-              }}
-            >
-              <span style={{
-                position: 'absolute',
-                top: '2px',
-                left: '2px',
-                fontSize: `${squareSize / 3}px`,
-                color: 'black',
-                textShadow: '0 0 2px white',
-              }}>
-                {index + 1}
-              </span>
-            </div>
+            id={`right-cell-${index}`} 
+            key={index}
+            className="cell" 
+            style={{
+              backgroundColor: cell.color,
+              width: squareSize,
+              height: squareSize,
+              border: '1px solid black', 
+            }}
+            />
           ))}
         </div>
       </div>
@@ -249,5 +202,4 @@ const Board: React.FC = () => {
     </div>
   );
 };
-
 export default Board;

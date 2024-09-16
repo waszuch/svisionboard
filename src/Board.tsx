@@ -16,6 +16,7 @@ const Board: React.FC = () => {
   const [windowWidth, setWindowWidth] = useState<number>(window.innerWidth);
   const [windowHeight, setWindowHeight] = useState<number>(window.innerHeight);
   const [message, setMessage] = useState<string>('');
+  const [playerPick, setPlayerPick] = useState<number | null>(null);
 
   useEffect(() => {
     const handleResize = () => {
@@ -31,6 +32,13 @@ const Board: React.FC = () => {
     const colors = ['#FFFFFF', '#FF0000', '#00FF00', '#0000FF', '#FFA500', '#FFFF00'];
     return colors[Math.floor(Math.random() * colors.length)];
   };
+  
+  const handleSquareClick = (index: number) => {
+    setPlayerPick(index);
+    setMessage(`Your pick: Square ${index + 1}`);
+  };
+  
+  
   const generateBoards = (size: number) => {
     const newLeftBoard: string[] = [];
     const newRightBoard: BoardCell[] = [];
@@ -62,16 +70,22 @@ const Board: React.FC = () => {
       const animatedCell = document.getElementById(`right-cell-${index}`);
       if (animatedCell) {
         animatedCell.classList.add('pulse');
-        setMessage(`The different square is number ${index + 1}`);
+        let messageText = `The different square is number ${index + 1}`;
+        if (playerPick === index) {
+          messageText += ". You guessed correctly!";
+        } else if (playerPick !== null) {
+          messageText += ". Your guess was incorrect.";
+        }
+        setMessage(messageText);
         
         setTimeout(() => {
           animatedCell.classList.remove('pulse');
           setMessage('');
-        }, 2000);
+          setPlayerPick(null); // Reset player's pick
+        }, 4000);
       }
     }
-  };
-  const handleBoardSizeChange = (size: number) => {
+  };  const handleBoardSizeChange = (size: number) => {
     setBoardSize(size);
     generateBoards(size);
     setIsDropdownOpen(false);
@@ -119,15 +133,17 @@ const Board: React.FC = () => {
         >
           {rightBoard.map((cell, index) => (
             <div
-            id={`right-cell-${index}`} 
-            key={index}
-            className="cell" 
-            style={{
-              backgroundColor: cell.color,
-              width: squareSize,
-              height: squareSize,
-              border: '1px solid black', 
-            }}
+              id={`right-cell-${index}`}
+              key={index}
+              className="cell"
+              style={{
+                backgroundColor: cell.color,
+                width: squareSize,
+                height: squareSize,
+                border: '1px solid black',
+                cursor: 'pointer', // Add this to show it's clickable
+              }}
+              onClick={() => handleSquareClick(index)}
             />
           ))}
         </div>
@@ -208,5 +224,8 @@ const Board: React.FC = () => {
   );
 };
 export default Board;
+
+
+
 
 

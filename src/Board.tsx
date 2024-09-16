@@ -116,7 +116,27 @@ const Board: React.FC = () => {
           }}
         >
           {leftBoard.map((color, index) => (
-            <div key={index} style={{ backgroundColor: color, width: squareSize, height: squareSize,border: '1px solid black',  }} />
+            <div 
+              key={index} 
+              style={{ 
+                backgroundColor: color, 
+                width: squareSize, 
+                height: squareSize,
+                border: '1px solid black',
+                position: 'relative',
+              }}
+            >
+              <span style={{
+                position: 'absolute',
+                top: '2px',
+                left: '2px',
+                fontSize: `${squareSize / 3}px`,
+                color: 'black',
+                textShadow: '0 0 2px white',
+              }}>
+                {index + 1}
+              </span>
+            </div>
           ))}
         </div>
         <div
@@ -131,16 +151,28 @@ const Board: React.FC = () => {
         >
           {rightBoard.map((cell, index) => (
             <div
-            id={`right-cell-${index}`} 
-            key={index}
-            className="cell" 
-            style={{
-              backgroundColor: cell.color,
-              width: squareSize,
-              height: squareSize,
-              border: '1px solid black', 
-            }}
-            />
+              id={`right-cell-${index}`} 
+              key={index}
+              className="cell" 
+              style={{
+                backgroundColor: cell.color,
+                width: squareSize,
+                height: squareSize,
+                border: '1px solid black',
+                position: 'relative',
+              }}
+            >
+              <span style={{
+                position: 'absolute',
+                top: '2px',
+                left: '2px',
+                fontSize: `${squareSize / 3}px`,
+                color: 'black',
+                textShadow: '0 0 2px white',
+              }}>
+                {index + 1}
+              </span>
+            </div>
           ))}
         </div>
       </div>

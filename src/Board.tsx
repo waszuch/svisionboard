@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui/button";
 import "./style.css";
+
 interface BoardCell {
   color: string;
   border: string;
   zIndex?: number;
 }
+
 const Board: React.FC = () => {
   const [boardSize, setBoardSize] = useState<number>(64);
   const [diffX, setDiffX] = useState<number | null>(null);
@@ -30,17 +32,17 @@ const Board: React.FC = () => {
       window.removeEventListener('orientationchange', handleResize);
     };
   }, []);
+
   const getRandomColor = (): string => {
     const colors = ['#FFFFFF', '#FF0000', '#00FF00', '#0000FF', '#FFA500', '#FFFF00'];
     return colors[Math.floor(Math.random() * colors.length)];
   };
-  
+
   const handleSquareClick = (index: number) => {
     setPlayerPick(index);
     setMessage(`Your pick: Square ${index + 1}`);
   };
-  
-  
+
   const generateBoards = (size: number) => {
     const newLeftBoard: string[] = [];
     const newRightBoard: BoardCell[] = [];
@@ -66,6 +68,7 @@ const Board: React.FC = () => {
     setLeftBoard(newLeftBoard);
     setRightBoard(newRightBoard);
   };
+
   const showDifference = () => {
     if (diffX !== null && diffY !== null) {
       const index = diffY * boardSize + diffX;
@@ -79,7 +82,7 @@ const Board: React.FC = () => {
           messageText += ". Your guess was incorrect.";
         }
         setMessage(messageText);
-        
+
         setTimeout(() => {
           animatedCell.classList.remove('pulse');
           setMessage('');
@@ -87,29 +90,23 @@ const Board: React.FC = () => {
         }, 6000);
       }
     }
-  };  const handleBoardSizeChange = (size: number) => {
+  };
+
+  const handleBoardSizeChange = (size: number) => {
     setBoardSize(size);
     generateBoards(size);
     setIsDropdownOpen(false);
   };
-  
-  const isPortrait = windowHeight > windowWidth;
 
-const boardContainerStyle = isPortrait
-  ? "flex flex-col items-center gap-5"
-  : "flex flex-row gap-5";
+  const squareSize = Math.min((windowWidth * 0.45) / boardSize, (windowHeight * 0.8) / boardSize);
 
-const squareSize = isPortrait
-  ? Math.min((windowWidth * 0.9) / boardSize, (windowHeight * 0.4) / boardSize)
-  : Math.min((windowWidth * 0.45) / boardSize, (windowHeight * 0.8) / boardSize);
-
- 
   if (leftBoard.length === 0 && rightBoard.length === 0) {
     generateBoards(boardSize);
   }
+
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-b from-[#010758] to-[#490d61] text-white font-sans p-4">
-      <div className={boardContainerStyle}>
+      <div className="flex flex-row gap-5 items-center justify-center">
         <div
           id="left-board"
           className="grid border-3 border-black bg-gray-800"
@@ -121,7 +118,10 @@ const squareSize = isPortrait
           }}
         >
           {leftBoard.map((color, index) => (
-            <div key={index} style={{ backgroundColor: color, width: squareSize, height: squareSize,border: '1px solid black',  }} />
+            <div
+              key={index}
+              style={{ backgroundColor: color, width: squareSize, height: squareSize, border: '1px solid black' }}
+            />
           ))}
         </div>
         <div
@@ -144,7 +144,7 @@ const squareSize = isPortrait
                 width: squareSize,
                 height: squareSize,
                 border: '1px solid black',
-                cursor: 'pointer', 
+                cursor: 'pointer',
               }}
               onClick={() => handleSquareClick(index)}
             />
@@ -152,21 +152,21 @@ const squareSize = isPortrait
         </div>
       </div>
       <div className="mt-2 text-xl font-bold">{message}</div>
-
+  
       <div className="mt-5 flex flex-wrap justify-center">
-  <Button
-    onClick={() => generateBoards(boardSize)}
-    className="m-2 px-3 py-1 text-sm cursor-pointer bg-[#620d91] text-white rounded transition-colors duration-300 hover:bg-[#7c27ab]"
-  >
-    Generate Board
-  </Button>
-  <Button
-    onClick={showDifference}
-    className="m-2 px-3 py-1 text-sm cursor-pointer bg-[#620d91] text-white rounded transition-colors duration-300 hover:bg-[#7c27ab]"
-  >
-    Show Differences
-  </Button>
-</div>
+        <Button
+          onClick={() => generateBoards(boardSize)}
+          className="m-2 px-3 py-1 text-sm cursor-pointer bg-[#620d91] text-white rounded transition-colors duration-300 hover:bg-[#7c27ab]"
+        >
+          Generate Board
+        </Button>
+        <Button
+          onClick={showDifference}
+          className="m-2 px-3 py-1 text-sm cursor-pointer bg-[#620d91] text-white rounded transition-colors duration-300 hover:bg-[#7c27ab]"
+        >
+          Show Differences
+        </Button>
+      </div>
       <div className="fixed top-2 right-2 z-10">
         <div className="relative">
           <Button
@@ -196,10 +196,6 @@ const squareSize = isPortrait
       </div>
     </div>
   );
+  
 };
 export default Board;
-
-
-
-
-

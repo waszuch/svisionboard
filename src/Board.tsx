@@ -24,8 +24,10 @@ const Board: React.FC = () => {
       setWindowHeight(window.innerHeight);
     };
     window.addEventListener('resize', handleResize);
+    window.addEventListener('orientationchange', handleResize);
     return () => {
       window.removeEventListener('resize', handleResize);
+      window.removeEventListener('orientationchange', handleResize);
     };
   }, []);
   const getRandomColor = (): string => {
@@ -81,8 +83,8 @@ const Board: React.FC = () => {
         setTimeout(() => {
           animatedCell.classList.remove('pulse');
           setMessage('');
-          setPlayerPick(null); // Reset player's pick
-        }, 4000);
+          setPlayerPick(null); 
+        }, 6000);
       }
     }
   };  const handleBoardSizeChange = (size: number) => {
@@ -91,25 +93,26 @@ const Board: React.FC = () => {
     setIsDropdownOpen(false);
   };
   
-  const isPortraitOnMobile = windowWidth < 640 && windowHeight > windowWidth;
- 
-  const squareSize = isPortraitOnMobile
-    ? 160 / boardSize 
-    : Math.min(
-        Math.min(windowWidth, windowHeight) * 0.8 / boardSize, 
-        30 
-      );
+  const isPortrait = windowHeight > windowWidth;
+
+const boardContainerStyle = isPortrait
+  ? "flex flex-col items-center gap-5"
+  : "flex flex-row gap-5";
+
+const squareSize = isPortrait
+  ? Math.min((windowWidth * 0.9) / boardSize, (windowHeight * 0.4) / boardSize)
+  : Math.min((windowWidth * 0.45) / boardSize, (windowHeight * 0.8) / boardSize);
+
  
   if (leftBoard.length === 0 && rightBoard.length === 0) {
     generateBoards(boardSize);
   }
   return (
-    <div className="flex flex-col items-center justify-center h-screen bg-gradient-to-b from-[#010758] to-[#490d61] text-white font-sans">
-      <div className="flex flex-row gap-5">
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-b from-[#010758] to-[#490d61] text-white font-sans p-4">
+      <div className={boardContainerStyle}>
         <div
-       id="left-board"
-       className="grid border-3 border-black bg-gray-800"
-       
+          id="left-board"
+          className="grid border-3 border-black bg-gray-800"
           style={{
             gridTemplateColumns: `repeat(${boardSize}, ${squareSize}px)`,
             gridTemplateRows: `repeat(${boardSize}, ${squareSize}px)`,
@@ -123,7 +126,7 @@ const Board: React.FC = () => {
         </div>
         <div
           id="right-board"
-       className="grid border-3 border-black bg-gray-800"
+          className="grid border-3 border-black bg-gray-800"
           style={{
             gridTemplateColumns: `repeat(${boardSize}, ${squareSize}px)`,
             gridTemplateRows: `repeat(${boardSize}, ${squareSize}px)`,
@@ -141,7 +144,7 @@ const Board: React.FC = () => {
                 width: squareSize,
                 height: squareSize,
                 border: '1px solid black',
-                cursor: 'pointer', // Add this to show it's clickable
+                cursor: 'pointer', 
               }}
               onClick={() => handleSquareClick(index)}
             />
@@ -150,72 +153,43 @@ const Board: React.FC = () => {
       </div>
       <div className="mt-2 text-xl font-bold">{message}</div>
 
-      <div className="mt-5">
-        <Button
-          onClick={() => generateBoards(boardSize)}
-          className="mx-2 px-5 py-2 text-lg sm:text-base sm:px-3 sm:py-1 cursor-pointer bg-[#620d91] text-white rounded transition-colors duration-300 hover:bg-[#7c27ab]"
-         
-        >
-          Generate Board
-        </Button>
-        <Button
-          onClick={showDifference}
-          className="mx-2 px-5 py-2 text-lg sm:text-base sm:px-3 sm:py-1 cursor-pointer bg-[#620d91] text-white rounded transition-colors duration-300 hover:bg-[#7c27ab]"
-          
-        >
-          Show Differences
-        </Button>
-      </div>
-      <div className="fixed top-2 right-2">
+      <div className="mt-5 flex flex-wrap justify-center">
+  <Button
+    onClick={() => generateBoards(boardSize)}
+    className="m-2 px-3 py-1 text-sm cursor-pointer bg-[#620d91] text-white rounded transition-colors duration-300 hover:bg-[#7c27ab]"
+  >
+    Generate Board
+  </Button>
+  <Button
+    onClick={showDifference}
+    className="m-2 px-3 py-1 text-sm cursor-pointer bg-[#620d91] text-white rounded transition-colors duration-300 hover:bg-[#7c27ab]"
+  >
+    Show Differences
+  </Button>
+</div>
+      <div className="fixed top-2 right-2 z-10">
         <div className="relative">
           <Button
             onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-            className="mx-2 px-5 py-2 text-lg sm:text-base sm:px-3 sm:py-1 cursor-pointer bg-[#620d91] text-white rounded transition-colors duration-300 hover:bg-[#7c27ab]"
+            className="px-3 py-1 text-sm cursor-pointer bg-[#620d91] text-white rounded transition-colors duration-300 hover:bg-[#7c27ab]"
           >
             Board Size
           </Button>
           {isDropdownOpen && (
-            <div className="absolute right-0 mt-2 bg-pink-600 shadow-lg">
-              <a
-                href="#"
-                onClick={(e) => {
-                  e.preventDefault();
-                  handleBoardSizeChange(24);
-                }}
-                className="block text-white no-underline px-4 py-2 hover:bg-pink-500"
-              >
-                24x24
-              </a>
-              <a
-                href="#"
-                onClick={(e) => {
-                  e.preventDefault();
-                  handleBoardSizeChange(32);
-                }}
-                className="block text-white no-underline px-4 py-2 hover:bg-pink-500"
-              >
-                32x32
-              </a>
-              <a
-                href="#"
-                onClick={(e) => {
-                  e.preventDefault();
-                  handleBoardSizeChange(40);
-                }}
-                className="block text-white no-underline px-4 py-2 hover:bg-pink-500"
-              >
-                40x40
-              </a>
-              <a
-                href="#"
-                onClick={(e) => {
-                  e.preventDefault();
-                  handleBoardSizeChange(48);
-                }}
-                className="block text-white no-underline px-4 py-2 hover:bg-pink-500"
-              >
-                48x48
-              </a>
+            <div className="absolute right-0 mt-2 bg-pink-600 shadow-lg rounded">
+              {[24, 32, 40, 48].map((size) => (
+                <a
+                  key={size}
+                  href="#"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    handleBoardSizeChange(size);
+                  }}
+                  className="block text-white no-underline px-4 py-2 hover:bg-pink-500 text-sm"
+                >
+                  {size}x{size}
+                </a>
+              ))}
             </div>
           )}
         </div>

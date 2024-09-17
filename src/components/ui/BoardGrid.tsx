@@ -30,7 +30,7 @@ const BoardGrid: React.FC<BoardGridProps> = ({ board, squareSize, boardSize, isR
         <div
           id={isRightBoard ? `right-cell-${index}` : undefined}
           key={index}
-          className={isRightBoard ? "cell" : undefined}
+          className={`${isRightBoard ? "cell" : ""}relative`}
           style={{
             backgroundColor: typeof cell === 'string' ? cell : cell.color,
             width: squareSize,

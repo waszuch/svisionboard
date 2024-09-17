@@ -95,6 +95,13 @@ const Board: React.FC = () => {
           <BoardGrid board={leftBoard} squareSize={squareSize} boardSize={boardSize} />
           <BoardGrid board={rightBoard} squareSize={squareSize} boardSize={boardSize} isRightBoard onCellClick={handleSquareClick} />
         </div>
+        
+        <div className="flex justify-center items-center my-4">
+          <div className='calibration-dot'></div>
+          <div className='calibration-dot mx-4'></div>
+          <div className='calibration-dot'></div>
+      </div>
+        
         <div className="mt-4 text-white text-left w-full max-w-[calc(90%+20px)]">
           <p>Player Pick: {playerPick !== null ? playerPick : ''}</p>
           <p>Correct Pick: {correctPick !== null ? correctPick : ''}</p>

@@ -6,7 +6,7 @@ interface BoardSizeDropdownProps {
   currentSize: number;
 }
 
-const BoardSizeDropdown: React.FC<BoardSizeDropdownProps> = ({ onSizeChange, currentSize }) => {
+const BoardSizeDropdown: React.FC<BoardSizeDropdownProps> = ({ onSizeChange }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleDropdown = () => setIsOpen(!isOpen);
@@ -22,7 +22,7 @@ const BoardSizeDropdown: React.FC<BoardSizeDropdownProps> = ({ onSizeChange, cur
         onClick={toggleDropdown}
         className="px-3 py-1 text-sm cursor-pointer bg-[#620d91] text-white rounded transition-colors duration-300 hover:bg-[#7c27ab]"
       >
-        Board Size: {currentSize}x{currentSize}
+        Board Size
       </Button>
       {isOpen && (
         <div className="absolute right-0 mt-2 bg-pink-600 shadow-lg rounded">

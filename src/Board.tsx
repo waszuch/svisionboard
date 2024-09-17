@@ -91,16 +91,21 @@ const Board: React.FC = () => {
       </div>
       <div className="h-16"></div>
       <div className="flex flex-col items-center justify-center">
-        <div className="flex flex-row gap-5 items-center justify-center">
-          <BoardGrid board={leftBoard} squareSize={squareSize} boardSize={boardSize} />
-          <BoardGrid board={rightBoard} squareSize={squareSize} boardSize={boardSize} isRightBoard onCellClick={handleSquareClick} />
+        <div className="flex flex-row gap-5 items-start justify-center">
+          <div className="flex flex-col items-center">
+            <BoardGrid board={leftBoard} squareSize={squareSize} boardSize={boardSize} />
+            <div className="mt-2">
+              <div className='calibration-dot'></div>
+            </div>
+          </div>
+          <div className="flex flex-col items-center">
+            <BoardGrid board={rightBoard} squareSize={squareSize} boardSize={boardSize} isRightBoard onCellClick={handleSquareClick} />
+            <div className="mt-2">
+              <div className='calibration-dot'></div>
+            </div>
+          </div>
         </div>
-        
-        <div className="flex justify-center items-center my-4">
-          <div className='calibration-dot'></div>
-          <div className='calibration-dot mx-4'></div>
-          <div className='calibration-dot'></div>
-      </div>
+      
         
         <div className="mt-4 text-white text-left w-full max-w-[calc(90%+20px)]">
           <p>Player Pick: {playerPick !== null ? playerPick : ''}</p>

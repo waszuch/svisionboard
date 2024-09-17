@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import "./style.css";
 import { generateBoards, BoardCell } from './utils/boardUtils';
 import BoardGrid from './components/ui/BoardGrid';
+import BoardSizeDropdown from './components/ui/BoardSizeDropdown';
 
 const Board: React.FC = () => {
   const [boardSize, setBoardSize] = useState<number>(64);
@@ -10,7 +11,6 @@ const Board: React.FC = () => {
   const [diffY, setDiffY] = useState<number | null>(null);
   const [leftBoard, setLeftBoard] = useState<string[]>([]);
   const [rightBoard, setRightBoard] = useState<BoardCell[]>([]);
-  const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
   const [windowWidth, setWindowWidth] = useState<number>(window.innerWidth);
   const [windowHeight, setWindowHeight] = useState<number>(window.innerHeight);
   const [message, setMessage] = useState<string>('');
@@ -68,7 +68,6 @@ const Board: React.FC = () => {
   const handleBoardSizeChange = (size: number) => {
     setBoardSize(size);
     generateNewBoards(size);
-    setIsDropdownOpen(false);
   };
 
   const squareSize = Math.min((windowWidth * 0.45) / boardSize, (windowHeight * 0.8) / boardSize);
@@ -100,31 +99,10 @@ const Board: React.FC = () => {
         </Button>
       </div>
       <div className="fixed top-2 right-2 z-10">
-        <div className="relative">
-          <Button
-            onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-            className="px-3 py-1 text-sm cursor-pointer bg-[#620d91] text-white rounded transition-colors duration-300 hover:bg-[#7c27ab]"
-          >
-            Board Size
-          </Button>
-          {isDropdownOpen && (
-            <div className="absolute right-0 mt-2 bg-pink-600 shadow-lg rounded">
-              {[24, 32, 40, 48].map((size) => (
-                <a
-                  key={size}
-                  href="#"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    handleBoardSizeChange(size);
-                  }}
-                  className="block text-white no-underline px-4 py-2 hover:bg-pink-500 text-sm"
-                >
-                  {size}x{size}
-                </a>
-              ))}
-            </div>
-          )}
-        </div>
+        <BoardSizeDropdown
+          onSizeChange={handleBoardSizeChange}
+          currentSize={boardSize}
+        />
       </div>
     </div>
   );

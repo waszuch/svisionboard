@@ -1,12 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import "./style.css";
-
-interface BoardCell {
-  color: string;
-  border: string;
-  zIndex?: number;
-}
+import { generateBoards, BoardCell } from './utils/boardUtils';
+import BoardGrid from './components/ui/BoardGrid';
 
 const Board: React.FC = () => {
   const [boardSize, setBoardSize] = useState<number>(64);
@@ -33,40 +29,17 @@ const Board: React.FC = () => {
     };
   }, []);
 
-  const getRandomColor = (): string => {
-    const colors = ['#FFFFFF', '#FF0000', '#00FF00', '#0000FF', '#FFA500', '#FFFF00'];
-    return colors[Math.floor(Math.random() * colors.length)];
-  };
-
   const handleSquareClick = (index: number) => {
     setPlayerPick(index);
     setMessage(`Your pick: Square ${index + 1}`);
   };
 
-  const generateBoards = (size: number) => {
-    const newLeftBoard: string[] = [];
-    const newRightBoard: BoardCell[] = [];
-    const newDiffX = Math.floor(Math.random() * size);
-    const newDiffY = Math.floor(Math.random() * size);
-    setDiffX(newDiffX);
-    setDiffY(newDiffY);
-    for (let y = 0; y < size; y++) {
-      for (let x = 0; x < size; x++) {
-        const color = getRandomColor();
-        newLeftBoard.push(color);
-        if (x === newDiffX && y === newDiffY) {
-          let differentColor;
-          do {
-            differentColor = getRandomColor();
-          } while (differentColor === color);
-          newRightBoard.push({ color: differentColor, border: 'none' });
-        } else {
-          newRightBoard.push({ color: color, border: 'none' });
-        }
-      }
-    }
+  const generateNewBoards = (size: number) => {
+    const { newLeftBoard, newRightBoard, newDiffX, newDiffY } = generateBoards(size);
     setLeftBoard(newLeftBoard);
     setRightBoard(newRightBoard);
+    setDiffX(newDiffX);
+    setDiffY(newDiffY);
   };
 
   const showDifference = () => {
@@ -94,68 +67,27 @@ const Board: React.FC = () => {
 
   const handleBoardSizeChange = (size: number) => {
     setBoardSize(size);
-    generateBoards(size);
+    generateNewBoards(size);
     setIsDropdownOpen(false);
   };
 
   const squareSize = Math.min((windowWidth * 0.45) / boardSize, (windowHeight * 0.8) / boardSize);
 
   if (leftBoard.length === 0 && rightBoard.length === 0) {
-    generateBoards(boardSize);
+    generateNewBoards(boardSize);
   }
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-b from-[#010758] to-[#490d61] text-white font-sans p-4">
       <div className="flex flex-row gap-5 items-center justify-center">
-        <div
-          id="left-board"
-          className="grid border-3 border-black bg-gray-800"
-          style={{
-            gridTemplateColumns: `repeat(${boardSize}, ${squareSize}px)`,
-            gridTemplateRows: `repeat(${boardSize}, ${squareSize}px)`,
-            width: `${squareSize * boardSize}px`,
-            height: `${squareSize * boardSize}px`,
-          }}
-        >
-          {leftBoard.map((color, index) => (
-            <div
-              key={index}
-              style={{ backgroundColor: color, width: squareSize, height: squareSize, border: '1px solid black' }}
-            />
-          ))}
-        </div>
-        <div
-          id="right-board"
-          className="grid border-3 border-black bg-gray-800"
-          style={{
-            gridTemplateColumns: `repeat(${boardSize}, ${squareSize}px)`,
-            gridTemplateRows: `repeat(${boardSize}, ${squareSize}px)`,
-            width: `${squareSize * boardSize}px`,
-            height: `${squareSize * boardSize}px`,
-          }}
-        >
-          {rightBoard.map((cell, index) => (
-            <div
-              id={`right-cell-${index}`}
-              key={index}
-              className="cell"
-              style={{
-                backgroundColor: cell.color,
-                width: squareSize,
-                height: squareSize,
-                border: '1px solid black',
-                cursor: 'pointer',
-              }}
-              onClick={() => handleSquareClick(index)}
-            />
-          ))}
-        </div>
+        <BoardGrid board={leftBoard} squareSize={squareSize} boardSize={boardSize} />
+        <BoardGrid board={rightBoard} squareSize={squareSize} boardSize={boardSize} isRightBoard onCellClick={handleSquareClick} />
       </div>
       <div className="mt-2 text-xl font-bold">{message}</div>
   
       <div className="mt-5 flex flex-wrap justify-center">
         <Button
-          onClick={() => generateBoards(boardSize)}
+          onClick={() => generateNewBoards(boardSize)}
           className="m-2 px-3 py-1 text-sm cursor-pointer bg-[#620d91] text-white rounded transition-colors duration-300 hover:bg-[#7c27ab]"
         >
           Generate Board
@@ -196,6 +128,6 @@ const Board: React.FC = () => {
       </div>
     </div>
   );
-  
 };
+
 export default Board;

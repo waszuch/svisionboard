@@ -13,8 +13,19 @@ const Board: React.FC = () => {
   const [rightBoard, setRightBoard] = useState<BoardCell[]>([]);
   const [windowWidth, setWindowWidth] = useState<number>(window.innerWidth);
   const [windowHeight, setWindowHeight] = useState<number>(window.innerHeight);
-  const [message, setMessage] = useState<string>('');
   const [playerPick, setPlayerPick] = useState<number | null>(null);
+  const [correctPick, setCorrectPick] = useState<number | null>(null);
+  const [isDifferenceShown, setIsDifferenceShown] = useState(false);
+  const resetGame = () => {
+    setPlayerPick(null);
+    setCorrectPick(null);
+    setIsDifferenceShown(false);
+
+    
+    const cells = document.querySelectorAll('.cell');
+    cells.forEach(cell => cell.classList.remove('pulse'));
+  };
+  
 
   useEffect(() => {
     const handleResize = () => {
@@ -30,8 +41,7 @@ const Board: React.FC = () => {
   }, []);
 
   const handleSquareClick = (index: number) => {
-    setPlayerPick(index);
-    setMessage(`Your pick: Square ${index + 1}`);
+    setPlayerPick(index + 1);
   };
 
   const generateNewBoards = (size: number) => {
@@ -40,28 +50,23 @@ const Board: React.FC = () => {
     setRightBoard(newRightBoard);
     setDiffX(newDiffX);
     setDiffY(newDiffY);
+    resetGame();
   };
 
-  const showDifference = () => {
+  const toggleDifference = () => {
     if (diffX !== null && diffY !== null) {
       const index = diffY * boardSize + diffX;
       const animatedCell = document.getElementById(`right-cell-${index}`);
       if (animatedCell) {
-        animatedCell.classList.add('pulse');
-        let messageText = `The different square is number ${index + 1}`;
-        if (playerPick === index) {
-          messageText += ". You guessed correctly!";
-        } else if (playerPick !== null) {
-          messageText += ". Your guess was incorrect.";
-        }
-        setMessage(messageText);
-
-        setTimeout(() => {
+        if (!isDifferenceShown) {
+          setCorrectPick(index + 1);
+          animatedCell.classList.add('pulse');
+        } else {
+          setCorrectPick(null);
           animatedCell.classList.remove('pulse');
-          setMessage('');
-          setPlayerPick(null); 
-        }, 6000);
+        }
       }
+      setIsDifferenceShown(!isDifferenceShown);
     }
   };
 
@@ -78,12 +83,23 @@ const Board: React.FC = () => {
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-b from-[#010758] to-[#490d61] text-white font-sans p-4">
-      <div className="flex flex-row gap-5 items-center justify-center">
-        <BoardGrid board={leftBoard} squareSize={squareSize} boardSize={boardSize} />
-        <BoardGrid board={rightBoard} squareSize={squareSize} boardSize={boardSize} isRightBoard onCellClick={handleSquareClick} />
+      <div className="absolute top-4 right-4 z-10">
+        <BoardSizeDropdown
+          onSizeChange={handleBoardSizeChange}
+          currentSize={boardSize}
+        />
       </div>
-      <div className="mt-2 text-xl font-bold">{message}</div>
-  
+      <div className="h-16"></div>
+      <div className="flex flex-col items-center justify-center">
+        <div className="flex flex-row gap-5 items-center justify-center">
+          <BoardGrid board={leftBoard} squareSize={squareSize} boardSize={boardSize} />
+          <BoardGrid board={rightBoard} squareSize={squareSize} boardSize={boardSize} isRightBoard onCellClick={handleSquareClick} />
+        </div>
+        <div className="mt-4 text-white text-left w-full max-w-[calc(90%+20px)]">
+          <p>Player Pick: {playerPick !== null ? playerPick : ''}</p>
+          <p>Correct Pick: {correctPick !== null ? correctPick : ''}</p>
+        </div>
+      </div>
       <div className="mt-5 flex flex-wrap justify-center">
         <Button
           onClick={() => generateNewBoards(boardSize)}
@@ -92,20 +108,23 @@ const Board: React.FC = () => {
           Generate Board
         </Button>
         <Button
-          onClick={showDifference}
+          onClick={toggleDifference}
           className="m-2 px-3 py-1 text-sm cursor-pointer bg-[#620d91] text-white rounded transition-colors duration-300 hover:bg-[#7c27ab]"
         >
-          Show Differences
+          {isDifferenceShown ? 'Hide Difference' : 'Show Difference'}
         </Button>
-      </div>
-      <div className="fixed top-2 right-2 z-10">
-        <BoardSizeDropdown
-          onSizeChange={handleBoardSizeChange}
-          currentSize={boardSize}
-        />
       </div>
     </div>
   );
 };
 
 export default Board;
+
+
+
+
+
+
+
+
+

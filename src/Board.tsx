@@ -16,17 +16,16 @@ const Board: React.FC = () => {
   const [playerPick, setPlayerPick] = useState<number | null>(null);
   const [correctPick, setCorrectPick] = useState<number | null>(null);
   const [isDifferenceShown, setIsDifferenceShown] = useState(false);
+  
   const resetGame = () => {
     setPlayerPick(null);
     setCorrectPick(null);
     setIsDifferenceShown(false);
-
     
     const cells = document.querySelectorAll('.cell');
     cells.forEach(cell => cell.classList.remove('pulse'));
   };
   
-
   useEffect(() => {
     const handleResize = () => {
       setWindowWidth(window.innerWidth);
@@ -50,7 +49,13 @@ const Board: React.FC = () => {
     setRightBoard(newRightBoard);
     setDiffX(newDiffX);
     setDiffY(newDiffY);
+    
     resetGame();
+
+   
+    if (isDifferenceShown) {
+      toggleDifference();  
+    }
   };
 
   const toggleDifference = () => {
@@ -73,6 +78,11 @@ const Board: React.FC = () => {
   const handleBoardSizeChange = (size: number) => {
     setBoardSize(size);
     generateNewBoards(size);
+    
+    
+    if (isDifferenceShown) {
+      toggleDifference();
+    }
   };
 
   const squareSize = Math.min((windowWidth * 0.45) / boardSize, (windowHeight * 0.8) / boardSize);
@@ -106,7 +116,6 @@ const Board: React.FC = () => {
           </div>
         </div>
       
-        
         <div className="mt-4 text-white text-left w-full max-w-[calc(90%+20px)]">
           <p>Player Pick: {playerPick !== null ? playerPick : ''}</p>
           <p>Correct Pick: {correctPick !== null ? correctPick : ''}</p>
@@ -131,7 +140,6 @@ const Board: React.FC = () => {
 };
 
 export default Board;
-
 
 
 

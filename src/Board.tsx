@@ -92,7 +92,7 @@ const Board: React.FC = () => {
   }
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-b from-[#010758] to-[#490d61] text-white font-sans p-4">
+    <div className="flex flex-col items-center justify-center min-h-screen bg-[#f0f4f8] text-black font-sans p-4">
       <div className="absolute top-4 right-4 z-10">
         <BoardSizeDropdown
           onSizeChange={handleBoardSizeChange}
@@ -116,7 +116,7 @@ const Board: React.FC = () => {
           </div>
         </div>
       
-        <div className="mt-4 text-white text-left w-full max-w-[calc(90%+20px)]">
+        <div className="mt-4 text-black text-left w-full max-w-[calc(90%+20px)]">
           <p>Player Pick: {playerPick !== null ? playerPick : ''}</p>
           <p>Correct Pick: {correctPick !== null ? correctPick : ''}</p>
         </div>

@@ -140,3 +140,6 @@ html.dark button:hover {
   background-color: #ccc;
   color: #000;
 }
+html.dark .calibration-dot{
+background-color: white;
+}

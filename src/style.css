@@ -99,3 +99,44 @@
   background-color: black;
   border-radius: 50%;
 }
+
+body {
+  background-color: #f0f4f8; 
+  color: #000; 
+}
+
+button {
+  background-color: #000;
+  color: #fff;
+}
+
+
+html.dark body {
+  background-color: #000; 
+  color: #fff; 
+}
+
+html.dark .button {
+  background-color: #fff; 
+  color: #000; 
+}
+
+html.dark .text-black {
+  color: #fff; 
+}
+
+html.dark .bg-#f0f4f8 {
+  background-color: #000; 
+}
+
+
+html.dark .board-size-dropdown, html.dark .generate-board, html.dark .show-difference {
+  background-color: #fff; 
+  color: #000; 
+}
+
+
+html.dark button:hover {
+  background-color: #ccc;
+  color: #000;
+}

@@ -20,12 +20,12 @@ const BoardSizeDropdown: React.FC<BoardSizeDropdownProps> = ({ onSizeChange }) =
     <div className="relative">
       <Button
         onClick={toggleDropdown}
-        className="px-3 py-1 text-sm cursor-pointer bg-[#620d91] text-white rounded transition-colors duration-300 hover:bg-[#7c27ab]"
+        className="px-3 py-1 text-sm cursor-pointer bg-black text-white rounded transition-colors duration-300 hover:bg-gray-800"
       >
         Board Size
       </Button>
       {isOpen && (
-        <div className="absolute right-0 mt-2 bg-pink-600 shadow-lg rounded">
+        <div className="absolute right-0 mt-2 bg-gray-800 shadow-lg rounded">
           {[24, 32, 40, 48].map((size) => (
             <a
               key={size}
@@ -34,7 +34,7 @@ const BoardSizeDropdown: React.FC<BoardSizeDropdownProps> = ({ onSizeChange }) =
                 e.preventDefault();
                 handleSizeChange(size);
               }}
-              className="block text-white no-underline px-4 py-2 hover:bg-pink-500 text-sm"
+              className="block text-white no-underline px-4 py-2 hover:bg-gray-700 text-sm"
             >
               {size}x{size}
             </a>

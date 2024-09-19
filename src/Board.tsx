@@ -2,8 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import "./style.css";
 import { generateBoards, BoardCell } from './utils/boardUtils';
-import BoardGrid from './components/ui/BoardGrid';
-import BoardSizeDropdown from './components/ui/BoardSizeDropdown';
+import BoardGrid from './components/BoardGrid';
+import BoardSizeDropdown from './components/BoardSizeDropdown';
+import { ThemeProvider } from "@/components/theme-provider"
+import { ModeToggle } from './components/mode-toggle';
 
 const Board: React.FC = () => {
   const [boardSize, setBoardSize] = useState<number>(64);
@@ -92,59 +94,65 @@ const Board: React.FC = () => {
   }
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-[#f0f4f8] text-black font-sans p-4">
-      <div className="absolute top-4 right-4 z-10">
-        <BoardSizeDropdown
-          onSizeChange={handleBoardSizeChange}
-          currentSize={boardSize}
-        />
-      </div>
-      <div className="h-16"></div>
-      <div className="flex flex-col items-center justify-center">
-        <div className="flex flex-row gap-5 items-start justify-center">
-          <div className="flex flex-col items-center">
-            <BoardGrid board={leftBoard} squareSize={squareSize} boardSize={boardSize} />
-            <div className="mt-2">
-              <div className='calibration-dot'></div>
-            </div>
-          </div>
-          <div className="flex flex-col items-center">
-            <BoardGrid board={rightBoard} squareSize={squareSize} boardSize={boardSize} isRightBoard onCellClick={handleSquareClick} />
-            <div className="mt-2">
-              <div className='calibration-dot'></div>
-            </div>
-          </div>
-        </div>
+    <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+      <div className="flex flex-col items-center justify-center min-h-screen bg-[#f0f4f8] dark:bg-black text-black dark:text-white font-sans p-4">
+        
       
-        <div className="mt-4 text-black text-left w-full max-w-[calc(90%+20px)]">
-          <p>Player Pick: {playerPick !== null ? playerPick : ''}</p>
-          <p>Correct Pick: {correctPick !== null ? correctPick : ''}</p>
+        <div className="absolute top-4 left-4 z-10">
+          <ModeToggle />
+        </div>
+        
+       
+        <div className="absolute top-4 right-4 z-10">
+          <BoardSizeDropdown
+            onSizeChange={handleBoardSizeChange}
+            currentSize={boardSize}
+          />
+        </div>
+
+        
+        <div className="h-16"></div>
+        <div className="flex flex-col items-center justify-center">
+          <div className="flex flex-row gap-5 items-start justify-center">
+            <div className="flex flex-col items-center">
+              <BoardGrid board={leftBoard} squareSize={squareSize} boardSize={boardSize} />
+              <div className="mt-2">
+                <div className='calibration-dot'></div>
+              </div>
+            </div>
+            <div className="flex flex-col items-center">
+              <BoardGrid board={rightBoard} squareSize={squareSize} boardSize={boardSize} isRightBoard onCellClick={handleSquareClick} />
+              <div className="mt-2">
+                <div className='calibration-dot'></div>
+              </div>
+            </div>
+          </div>
+          
+          
+          <div className="mt-4 text-black dark:text-white text-left w-full max-w-[calc(90%+20px)]">
+            <p>Player Pick: {playerPick !== null ? playerPick : ''}</p>
+            <p>Correct Pick: {correctPick !== null ? correctPick : ''}</p>
+          </div>
+        </div>
+        
+        
+        <div className="mt-5 flex flex-wrap justify-center">
+          <Button
+            onClick={() => generateNewBoards(boardSize)}
+            className="m-2 px-3 py-1 text-sm cursor-pointer bg-black dark:bg-white text-white dark:text-black rounded transition-colors duration-300 hover:bg-gray-800 dark:hover:bg-gray-200"
+          >
+            Generate Board
+          </Button>
+          <Button
+            onClick={toggleDifference}
+            className="m-2 px-3 py-1 text-sm cursor-pointer bg-black dark:bg-white text-white dark:text-black rounded transition-colors duration-300 hover:bg-gray-800 dark:hover:bg-gray-200"
+          >
+            {isDifferenceShown ? 'Hide Difference' : 'Show Difference'}
+          </Button>
         </div>
       </div>
-      <div className="mt-5 flex flex-wrap justify-center">
-        <Button
-          onClick={() => generateNewBoards(boardSize)}
-          className="m-2 px-3 py-1 text-sm cursor-pointer bg-[#620d91] text-white rounded transition-colors duration-300 hover:bg-[#7c27ab]"
-        >
-          Generate Board
-        </Button>
-        <Button
-          onClick={toggleDifference}
-          className="m-2 px-3 py-1 text-sm cursor-pointer bg-[#620d91] text-white rounded transition-colors duration-300 hover:bg-[#7c27ab]"
-        >
-          {isDifferenceShown ? 'Hide Difference' : 'Show Difference'}
-        </Button>
-      </div>
-    </div>
+    </ThemeProvider>
   );
 };
 
 export default Board;
-
-
-
-
-
-
-
-

@@ -21,7 +21,7 @@ const BoardSizeDropdown: React.FC<BoardSizeDropdownProps> = ({ onSizeChange }) =
     <div className="relative">
       <Button
         onClick={toggleDropdown}
-        className="px-3 py-1 text-sm cursor-pointer bg-black text-white rounded transition-colors duration-300 hover:bg-gray-800"
+        className="px-3 py-1 text-sm cursor-pointer bg-black dark:bg-white text-white dark:text-black rounded transition-colors duration-300 hover:bg-gray-800 dark:hover:bg-gray-200"
       >
         Board Size
       </Button>

@@ -77,6 +77,8 @@
   }
 }
 
+
+
 .pulse {
   animation: pulse 2s infinite;
   position: relative;
@@ -94,8 +96,8 @@
   animation: pulse 2s infinite;
 }
 .calibration-dot{
-  width: 25px;
-  height: 25px;
+  width: 30px;
+  height: 30px;
   background-color: black;
   border-radius: 50%;
 }
@@ -116,8 +118,8 @@ html.dark body {
   color: #fff; 
 }
 
-html.dark .button {
-  background-color: #fff; 
+html.dark button {
+  background-color:#fff; 
   color: #000; 
 }
 
@@ -142,4 +144,8 @@ html.dark button:hover {
 }
 html.dark .calibration-dot{
 background-color: white;
+}
+html.light button{
+  background-color: #000;
+  color: #ccc;
 }

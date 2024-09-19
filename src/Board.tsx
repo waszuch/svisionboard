@@ -19,6 +19,8 @@ const Board: React.FC = () => {
   const [correctPick, setCorrectPick] = useState<number | null>(null);
   const [isDifferenceShown, setIsDifferenceShown] = useState(false);
   
+
+ 
   const resetGame = () => {
     setPlayerPick(null);
     setCorrectPick(null);
@@ -46,6 +48,9 @@ const Board: React.FC = () => {
   };
 
   const generateNewBoards = (size: number) => {
+   
+
+   
     const { newLeftBoard, newRightBoard, newDiffX, newDiffY } = generateBoards(size);
     setLeftBoard(newLeftBoard);
     setRightBoard(newRightBoard);
@@ -53,11 +58,13 @@ const Board: React.FC = () => {
     setDiffY(newDiffY);
     
     resetGame();
-
    
+    
+
     if (isDifferenceShown) {
       toggleDifference();  
     }
+   
   };
 
   const toggleDifference = () => {
@@ -78,6 +85,9 @@ const Board: React.FC = () => {
   };
 
   const handleBoardSizeChange = (size: number) => {
+    
+ 
+    
     setBoardSize(size);
     generateNewBoards(size);
     
@@ -97,44 +107,39 @@ const Board: React.FC = () => {
     <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
       <div className="flex flex-col items-center justify-center min-h-screen bg-[#f0f4f8] dark:bg-black text-black dark:text-white font-sans p-4">
         
-      
-        <div className="absolute top-4 left-4 z-10">
+       <div className="absolute top-4 left-4 z-10">
           <ModeToggle />
         </div>
         
-       
-        <div className="absolute top-4 right-4 z-10">
+        <div className="absolute top-4 right-4 z-10 light-bg-color" >
           <BoardSizeDropdown
             onSizeChange={handleBoardSizeChange}
             currentSize={boardSize}
           />
         </div>
 
-        
-        <div className="h-16"></div>
+         <div className="h-16"></div>
         <div className="flex flex-col items-center justify-center">
           <div className="flex flex-row gap-5 items-start justify-center">
             <div className="flex flex-col items-center">
-              <BoardGrid board={leftBoard} squareSize={squareSize} boardSize={boardSize} />
-              <div className="mt-2">
+              <BoardGrid board={leftBoard} squareSize={squareSize} boardSize={boardSize}  />
+              <div className="mt-0">
                 <div className='calibration-dot'></div>
               </div>
             </div>
             <div className="flex flex-col items-center">
               <BoardGrid board={rightBoard} squareSize={squareSize} boardSize={boardSize} isRightBoard onCellClick={handleSquareClick} />
-              <div className="mt-2">
+              <div className="mt-0">
                 <div className='calibration-dot'></div>
               </div>
             </div>
           </div>
-          
-          
+           
           <div className="mt-4 text-black dark:text-white text-left w-full max-w-[calc(90%+20px)]">
             <p>Player Pick: {playerPick !== null ? playerPick : ''}</p>
             <p>Correct Pick: {correctPick !== null ? correctPick : ''}</p>
           </div>
         </div>
-        
         
         <div className="mt-5 flex flex-wrap justify-center">
           <Button
@@ -156,3 +161,7 @@ const Board: React.FC = () => {
 };
 
 export default Board;
+
+
+
+

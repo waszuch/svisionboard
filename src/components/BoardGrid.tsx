@@ -13,6 +13,7 @@ interface BoardGridProps {
   boardSize: number;
   isRightBoard?: boolean;
   onCellClick?: (index: number) => void;
+  
 }
 
 const BoardGrid: React.FC<BoardGridProps> = ({ board, squareSize, boardSize, isRightBoard, onCellClick }) => {

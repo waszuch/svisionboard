@@ -9,27 +9,24 @@ import { ModeToggle } from './components/mode-toggle';
 
 const Board: React.FC = () => {
   const [boardSize, setBoardSize] = useState<number>(64);
-  const [diffX, setDiffX] = useState<number | null>(null);
-  const [diffY, setDiffY] = useState<number | null>(null);
+  const [differences, setDifferences] = useState<Set<string>>(new Set());
   const [leftBoard, setLeftBoard] = useState<string[]>([]);
   const [rightBoard, setRightBoard] = useState<BoardCell[]>([]);
   const [windowWidth, setWindowWidth] = useState<number>(window.innerWidth);
   const [windowHeight, setWindowHeight] = useState<number>(window.innerHeight);
-  const [playerPick, setPlayerPick] = useState<number | null>(null);
-  const [correctPick, setCorrectPick] = useState<number | null>(null);
+  const [playerPicks, setPlayerPicks] = useState<Set<number>>(new Set());
+  const [correctPicks, setCorrectPicks] = useState<Set<number>>(new Set());
   const [isDifferenceShown, setIsDifferenceShown] = useState(false);
-  
 
- 
   const resetGame = () => {
-    setPlayerPick(null);
-    setCorrectPick(null);
+    setPlayerPicks(new Set());
+    setCorrectPicks(new Set());
     setIsDifferenceShown(false);
-    
+
     const cells = document.querySelectorAll('.cell');
     cells.forEach(cell => cell.classList.remove('pulse'));
   };
-  
+
   useEffect(() => {
     const handleResize = () => {
       setWindowWidth(window.innerWidth);
@@ -44,54 +41,53 @@ const Board: React.FC = () => {
   }, []);
 
   const handleSquareClick = (index: number) => {
-    setPlayerPick(index + 1);
+    setPlayerPicks(prev => {
+      const newPicks = new Set(prev);
+      if (newPicks.has(index + 1)) {
+        newPicks.delete(index + 1);
+      } else if (newPicks.size < 4) {
+        newPicks.add(index + 1);
+      }
+      return newPicks;
+    });
   };
 
   const generateNewBoards = (size: number) => {
-   
-
-   
-    const { newLeftBoard, newRightBoard, newDiffX, newDiffY } = generateBoards(size);
+    const { newLeftBoard, newRightBoard, differences } = generateBoards(size);
     setLeftBoard(newLeftBoard);
     setRightBoard(newRightBoard);
-    setDiffX(newDiffX);
-    setDiffY(newDiffY);
-    
+    setDifferences(differences);
     resetGame();
-   
-    
 
     if (isDifferenceShown) {
-      toggleDifference();  
+      toggleDifference();
     }
-   
   };
 
   const toggleDifference = () => {
-    if (diffX !== null && diffY !== null) {
-      const index = diffY * boardSize + diffX;
-      const animatedCell = document.getElementById(`right-cell-${index}`);
-      if (animatedCell) {
-        if (!isDifferenceShown) {
-          setCorrectPick(index + 1);
-          animatedCell.classList.add('pulse');
-        } else {
-          setCorrectPick(null);
-          animatedCell.classList.remove('pulse');
+    if (differences.size > 0) {
+      differences.forEach(diff => {
+        const [diffX, diffY] = diff.split(',').map(Number);
+        const index = diffY * boardSize + diffX;
+        const animatedCell = document.getElementById(`right-cell-${index}`);
+        if (animatedCell) {
+          if (!isDifferenceShown) {
+            setCorrectPicks(prev => new Set(prev).add(index + 1));
+            animatedCell.classList.add('pulse');
+          } else {
+            setCorrectPicks(new Set());
+            animatedCell.classList.remove('pulse');
+          }
         }
-      }
+      });
       setIsDifferenceShown(!isDifferenceShown);
     }
   };
 
   const handleBoardSizeChange = (size: number) => {
-    
- 
-    
     setBoardSize(size);
     generateNewBoards(size);
-    
-    
+
     if (isDifferenceShown) {
       toggleDifference();
     }
@@ -106,23 +102,20 @@ const Board: React.FC = () => {
   return (
     <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
       <div className="flex flex-col items-center justify-center min-h-screen bg-[#f0f4f8] dark:bg-black text-black dark:text-white font-sans p-4">
-        
-       <div className="absolute top-4 left-4 z-10">
+        <div className="absolute top-4 left-4 z-10">
           <ModeToggle />
         </div>
-        
-        <div className="absolute top-4 right-4 z-10 light-bg-color" >
+        <div className="absolute top-4 right-4 z-10 light-bg-color">
           <BoardSizeDropdown
             onSizeChange={handleBoardSizeChange}
             currentSize={boardSize}
           />
         </div>
-
-         <div className="h-16"></div>
+        <div className="h-16"></div>
         <div className="flex flex-col items-center justify-center">
           <div className="flex flex-row gap-5 items-start justify-center">
             <div className="flex flex-col items-center">
-              <BoardGrid board={leftBoard} squareSize={squareSize} boardSize={boardSize}  />
+              <BoardGrid board={leftBoard} squareSize={squareSize} boardSize={boardSize} />
               <div className="mt-0">
                 <div className='calibration-dot'></div>
               </div>
@@ -134,13 +127,11 @@ const Board: React.FC = () => {
               </div>
             </div>
           </div>
-           
           <div className="mt-4 text-black dark:text-white text-left w-full max-w-[calc(90%+20px)]">
-            <p>Player Pick: {playerPick !== null ? playerPick : ''}</p>
-            <p>Correct Pick: {correctPick !== null ? correctPick : ''}</p>
+            <p>Player Picks: {[...playerPicks].join(', ')}</p>
+            <p>Correct Picks: {[...correctPicks].join(', ')}</p>
           </div>
         </div>
-        
         <div className="mt-5 flex flex-wrap justify-center">
           <Button
             onClick={() => generateNewBoards(boardSize)}
@@ -161,7 +152,3 @@ const Board: React.FC = () => {
 };
 
 export default Board;
-
-
-
-

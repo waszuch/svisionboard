@@ -80,7 +80,7 @@
 
 
 .pulse {
-  animation: pulse 2s infinite;
+  animation: pulse 1s infinite;
   position: relative;
   z-index: 1;
 }
@@ -93,7 +93,7 @@
   right: -2px;
   bottom: -2px;
   border: 2px solid cyan;
-  animation: pulse 2s infinite;
+  animation: pulse 1s infinite;
 }
 .calibration-dot{
   width: 30px;

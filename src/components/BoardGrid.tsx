@@ -24,7 +24,7 @@ const BoardGrid: React.FC<BoardGridProps> = ({ board, squareSize, boardSize, isR
         if (cellElement) {
           cellElement.classList.remove('pulse-magenta');
         }
-      } else if (selectedCells.size < 5) {
+      } else if (selectedCells.size < 4) {
         setSelectedCells(prev => {
           const newSet = new Set(prev);
           newSet.add(index);

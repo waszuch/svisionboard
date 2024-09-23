@@ -149,3 +149,32 @@ html.light button{
   background-color: #000;
   color: #ccc;
 }
+
+@keyframes pulse-magenta {
+  0% {
+    box-shadow: 0 0 0 0 rgba(255, 0, 255, 0.7);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(255, 0, 255, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(255, 0, 255, 0);
+  }
+}
+
+.pulse-magenta {
+  animation: pulse 1s infinite;
+  position: relative;
+  z-index: 1;
+}
+.pulse-magenta::after {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  border: 2px solid magenta;
+  animation: pulse 1s infinite;
+  
+}

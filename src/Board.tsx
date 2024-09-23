@@ -10,7 +10,7 @@ import { ModeToggle } from './components/mode-toggle';
 const Board: React.FC = () => {
   const [boardSize, setBoardSize] = useState<number>(64);
   const [differences, setDifferences] = useState<Set<string>>(new Set());
-  const [leftBoard, setLeftBoard] = useState<string[]>([]);
+  const [leftBoard, setLeftBoard] = useState<BoardCell[]>([]);
   const [rightBoard, setRightBoard] = useState<BoardCell[]>([]);
   const [windowWidth, setWindowWidth] = useState<number>(window.innerWidth);
   const [windowHeight, setWindowHeight] = useState<number>(window.innerHeight);
@@ -24,7 +24,7 @@ const Board: React.FC = () => {
     setIsDifferenceShown(false);
 
     const cells = document.querySelectorAll('.cell');
-    cells.forEach(cell => cell.classList.remove('pulse'));
+    cells.forEach(cell => cell.classList.remove('pulse-magenta', 'pulse'));
   };
 
   useEffect(() => {

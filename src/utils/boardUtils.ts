@@ -4,7 +4,7 @@ export const getRandomColor = (): string => {
 };
 
 export const generateBoards = (size: number) => {
-  const newLeftBoard: string[] = [];
+  const newLeftBoard: BoardCell[] = [];
   const newRightBoard: BoardCell[] = [];
   const differences = new Set<string>();
 
@@ -17,7 +17,7 @@ export const generateBoards = (size: number) => {
   for (let y = 0; y < size; y++) {
     for (let x = 0; x < size; x++) {
       const color = getRandomColor();
-      newLeftBoard.push(color);
+      newLeftBoard.push({ color: color, border: 'none' });
       if (differences.has(`${x},${y}`)) {
         let differentColor;
         do {
@@ -31,9 +31,7 @@ export const generateBoards = (size: number) => {
   }
 
   return { newLeftBoard, newRightBoard, differences };
-};
-
-export interface BoardCell {
+};export interface BoardCell {
   color: string;
   border: string;
   zIndex?: number;

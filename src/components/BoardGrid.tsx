@@ -1,45 +1,64 @@
-import React from 'react';
-
-interface BoardCell {
-    color: string;
-    border: string;
-    zIndex?: number;
-  }
-
+import React, { useState } from 'react';
+import { BoardCell } from '../utils/boardUtils';
 
 interface BoardGridProps {
-  board: string[] | BoardCell[];
+  board: BoardCell[];
   squareSize: number;
   boardSize: number;
   isRightBoard?: boolean;
   onCellClick?: (index: number) => void;
-  
 }
 
 const BoardGrid: React.FC<BoardGridProps> = ({ board, squareSize, boardSize, isRightBoard, onCellClick }) => {
+  const [selectedCells, setSelectedCells] = useState<Set<number>>(new Set());
+
+  const handleCellClick = (index: number) => {
+    if (isRightBoard && onCellClick) {
+      if (selectedCells.has(index)) {
+        setSelectedCells(prev => {
+          const newSet = new Set(prev);
+          newSet.delete(index);
+          return newSet;
+        });
+        const cellElement = document.getElementById(`right-cell-${index}`);
+        if (cellElement) {
+          cellElement.classList.remove('pulse-magenta');
+        }
+      } else if (selectedCells.size < 5) {
+        setSelectedCells(prev => {
+          const newSet = new Set(prev);
+          newSet.add(index);
+          return newSet;
+        });
+        const cellElement = document.getElementById(`right-cell-${index}`);
+        if (cellElement) {
+          cellElement.classList.add('pulse-magenta');
+        }
+      }
+      onCellClick(index);
+    }
+  };
+
   return (
     <div
-      className={`grid border-3 border-black bg-gray-800`}
+      className="grid"
       style={{
         gridTemplateColumns: `repeat(${boardSize}, ${squareSize}px)`,
         gridTemplateRows: `repeat(${boardSize}, ${squareSize}px)`,
-        width: `${squareSize * boardSize}px`,
-        height: `${squareSize * boardSize}px`,
       }}
     >
       {board.map((cell, index) => (
         <div
-          id={isRightBoard ? `right-cell-${index}` : undefined}
           key={index}
-          className={`${isRightBoard ? "cell" : ""}relative`}
+          id={isRightBoard ? `right-cell-${index}` : undefined}
+          className={`cell ${selectedCells.has(index) ? 'pulse-magenta' : ''}`}
           style={{
-            backgroundColor: typeof cell === 'string' ? cell : cell.color,
             width: squareSize,
             height: squareSize,
+            backgroundColor: cell.color,
             border: '1px solid black',
-            cursor: isRightBoard ? 'pointer' : 'default',
           }}
-          onClick={isRightBoard ? () => onCellClick && onCellClick(index) : undefined}
+          onClick={() => handleCellClick(index)}
         />
       ))}
     </div>

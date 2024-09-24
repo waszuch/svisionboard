@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
+import { Slider } from "@/components/ui/slider";
 import "./style.css";
 import { generateBoards, BoardCell } from './utils/boardUtils';
 import BoardGrid from './components/BoardGrid';
-import BoardSizeDropdown from './components/BoardSizeDropdown';
 import { ThemeProvider } from "@/components/theme-provider"
 import { ModeToggle } from './components/mode-toggle';
 
@@ -18,15 +18,6 @@ const Board: React.FC = () => {
   const [correctPicks, setCorrectPicks] = useState<Set<number>>(new Set());
   const [isDifferenceShown, setIsDifferenceShown] = useState(false);
 
-  const resetGame = () => {
-    setPlayerPicks(new Set());
-    setCorrectPicks(new Set());
-    setIsDifferenceShown(false);
-
-    const cells = document.querySelectorAll('.cell');
-    cells.forEach(cell => cell.classList.remove('pulse-magenta', 'pulse'));
-  };
-
   useEffect(() => {
     const handleResize = () => {
       setWindowWidth(window.innerWidth);
@@ -39,6 +30,21 @@ const Board: React.FC = () => {
       window.removeEventListener('orientationchange', handleResize);
     };
   }, []);
+
+  useEffect(() => {
+    if (leftBoard.length === 0 && rightBoard.length === 0) {
+      generateNewBoards(boardSize);
+    }
+  }, []);
+
+  const resetGame = () => {
+    setPlayerPicks(new Set());
+    setCorrectPicks(new Set());
+    setIsDifferenceShown(false);
+
+    const cells = document.querySelectorAll('.cell');
+    cells.forEach(cell => cell.classList.remove('pulse-magenta', 'pulse'));
+  };
 
   const handleSquareClick = (index: number) => {
     setPlayerPicks(prev => {
@@ -87,7 +93,6 @@ const Board: React.FC = () => {
   const handleBoardSizeChange = (size: number) => {
     setBoardSize(size);
     generateNewBoards(size);
-
     if (isDifferenceShown) {
       toggleDifference();
     }
@@ -95,21 +100,11 @@ const Board: React.FC = () => {
 
   const squareSize = Math.min((windowWidth * 0.45) / boardSize, (windowHeight * 0.8) / boardSize);
 
-  if (leftBoard.length === 0 && rightBoard.length === 0) {
-    generateNewBoards(boardSize);
-  }
-
   return (
     <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
       <div className="flex flex-col items-center justify-center min-h-screen bg-[#f0f4f8] dark:bg-black text-black dark:text-white font-sans p-4">
         <div className="absolute top-4 left-4 z-10">
           <ModeToggle />
-        </div>
-        <div className="absolute top-4 right-4 z-10 light-bg-color">
-          <BoardSizeDropdown
-            onSizeChange={handleBoardSizeChange}
-            currentSize={boardSize}
-          />
         </div>
         <div className="h-16"></div>
         <div className="flex flex-col items-center justify-center">
@@ -126,6 +121,15 @@ const Board: React.FC = () => {
                 <div className='calibration-dot'></div>
               </div>
             </div>
+          </div>
+          <div className="mt-4 w-full max-w-[calc(90%+20px)]">
+            <Slider
+              min={5}
+              max={60}
+              step={1}
+              value={[boardSize]}
+              onValueChange={(value) => handleBoardSizeChange(value[0])}
+            />
           </div>
           <div className="mt-4 text-black dark:text-white text-left w-full max-w-[calc(90%+20px)]">
             <p>Player Picks: {[...playerPicks].join(', ')}</p>

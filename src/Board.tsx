@@ -139,6 +139,9 @@ const Board: React.FC = () => {
             </div>
           </div>
           <div className="mt-4 w-full max-w-[calc(90%+20px)]">
+          <div className="text-center mb-2 text-black dark:text-white">
+             {boardSize}x{boardSize}
+          </div>
             <Slider
               min={5}
               max={60}

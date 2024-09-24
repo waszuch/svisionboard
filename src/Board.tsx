@@ -18,6 +18,7 @@ const Board: React.FC = () => {
   const [correctPicks, setCorrectPicks] = useState<Set<number>>(new Set());
   const [isDifferenceShown, setIsDifferenceShown] = useState(false);
   const [selectedCells, setSelectedCells] = useState<Set<number>>(new Set());
+  const [differencesCount, setDifferencesCount] = useState<number>(1);
 
   useEffect(() => {
     const handleResize = () => {
@@ -53,7 +54,7 @@ const Board: React.FC = () => {
       const newSet = new Set(prev);
       if (newSet.has(index)) {
         newSet.delete(index);
-      } else if (newSet.size < 4) {
+      } else if (newSet.size < differencesCount) {
         newSet.add(index);
       }
       return newSet;
@@ -62,7 +63,7 @@ const Board: React.FC = () => {
       const newPicks = new Set(prev);
       if (newPicks.has(index + 1)) {
         newPicks.delete(index + 1);
-      } else if (newPicks.size < 4) {
+      } else if (newPicks.size < differencesCount) {
         newPicks.add(index + 1);
       }
       return newPicks;
@@ -70,7 +71,7 @@ const Board: React.FC = () => {
   };
 
   const generateNewBoards = (size: number) => {
-    const { newLeftBoard, newRightBoard, differences } = generateBoards(size);
+    const { newLeftBoard, newRightBoard, differences } = generateBoards(size, differencesCount);
     setLeftBoard(newLeftBoard);
     setRightBoard(newRightBoard);
     setDifferences(differences);
@@ -107,6 +108,11 @@ const Board: React.FC = () => {
     generateNewBoards(size);
   };
 
+  const handleDifferencesCountChange = (count: number) => {
+    setDifferencesCount(count);
+    generateNewBoards(boardSize);
+  };
+
   const squareSize = Math.min((windowWidth * 0.45) / boardSize, (windowHeight * 0.8) / boardSize);
 
   return (
@@ -139,9 +145,9 @@ const Board: React.FC = () => {
             </div>
           </div>
           <div className="mt-4 w-full max-w-[calc(90%+20px)]">
-          <div className="text-center mb-2 text-black dark:text-white">
-             {boardSize}x{boardSize}
-          </div>
+            <div className="text-center mb-2 text-black dark:text-white">
+              {boardSize}x{boardSize}
+            </div>
             <Slider
               min={5}
               max={60}
@@ -153,6 +159,17 @@ const Board: React.FC = () => {
           <div className="mt-4 text-black dark:text-white text-left w-full max-w-[calc(90%+20px)]">
             <p>Player Picks: {[...playerPicks].join(', ')}</p>
             <p>Correct Picks: {[...correctPicks].join(', ')}</p>
+          </div>
+          <div className="mt-4 flex flex-wrap justify-center">
+            {[1, 2, 3, 4].map(count => (
+              <Button
+                key={count}
+                onClick={() => handleDifferencesCountChange(count)}
+                className={`m-2 px-3 py-1 text-sm cursor-pointer ${differencesCount === count ? 'bg-gray-800 dark:bg-gray-200' : 'bg-black dark:bg-white'} text-white dark:text-black rounded transition-colors duration-300 hover:bg-gray-800 dark:hover:bg-gray-200`}
+              >
+                {count}
+              </Button>
+            ))}
           </div>
         </div>
         <div className="mt-5 flex flex-wrap justify-center">

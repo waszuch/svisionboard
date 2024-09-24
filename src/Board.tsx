@@ -17,6 +17,7 @@ const Board: React.FC = () => {
   const [playerPicks, setPlayerPicks] = useState<Set<number>>(new Set());
   const [correctPicks, setCorrectPicks] = useState<Set<number>>(new Set());
   const [isDifferenceShown, setIsDifferenceShown] = useState(false);
+  const [selectedCells, setSelectedCells] = useState<Set<number>>(new Set());
 
   useEffect(() => {
     const handleResize = () => {
@@ -41,12 +42,22 @@ const Board: React.FC = () => {
     setPlayerPicks(new Set());
     setCorrectPicks(new Set());
     setIsDifferenceShown(false);
+    setSelectedCells(new Set());
 
     const cells = document.querySelectorAll('.cell');
     cells.forEach(cell => cell.classList.remove('pulse-magenta', 'pulse'));
   };
 
   const handleSquareClick = (index: number) => {
+    setSelectedCells(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(index)) {
+        newSet.delete(index);
+      } else if (newSet.size < 4) {
+        newSet.add(index);
+      }
+      return newSet;
+    });
     setPlayerPicks(prev => {
       const newPicks = new Set(prev);
       if (newPicks.has(index + 1)) {
@@ -90,12 +101,10 @@ const Board: React.FC = () => {
     }
   };
 
-  const handleBoardSizeChange = (size: number) => {
+  const handleBoardSizeChange = (value: number[]) => {
+    const size = value[0];
     setBoardSize(size);
     generateNewBoards(size);
-    if (isDifferenceShown) {
-      toggleDifference();
-    }
   };
 
   const squareSize = Math.min((windowWidth * 0.45) / boardSize, (windowHeight * 0.8) / boardSize);
@@ -110,13 +119,20 @@ const Board: React.FC = () => {
         <div className="flex flex-col items-center justify-center">
           <div className="flex flex-row gap-5 items-start justify-center">
             <div className="flex flex-col items-center">
-              <BoardGrid board={leftBoard} squareSize={squareSize} boardSize={boardSize} />
+              <BoardGrid board={leftBoard} squareSize={squareSize} boardSize={boardSize} selectedCells={new Set()} />
               <div className="mt-0">
                 <div className='calibration-dot'></div>
               </div>
             </div>
             <div className="flex flex-col items-center">
-              <BoardGrid board={rightBoard} squareSize={squareSize} boardSize={boardSize} isRightBoard onCellClick={handleSquareClick} />
+              <BoardGrid 
+                board={rightBoard} 
+                squareSize={squareSize} 
+                boardSize={boardSize} 
+                isRightBoard 
+                onCellClick={handleSquareClick}
+                selectedCells={selectedCells}
+              />
               <div className="mt-0">
                 <div className='calibration-dot'></div>
               </div>
@@ -128,7 +144,7 @@ const Board: React.FC = () => {
               max={60}
               step={1}
               value={[boardSize]}
-              onValueChange={(value) => handleBoardSizeChange(value[0])}
+              onValueChange={handleBoardSizeChange}
             />
           </div>
           <div className="mt-4 text-black dark:text-white text-left w-full max-w-[calc(90%+20px)]">

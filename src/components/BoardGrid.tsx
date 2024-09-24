@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { BoardCell } from '../utils/boardUtils';
 
 interface BoardGridProps {
@@ -7,34 +7,19 @@ interface BoardGridProps {
   boardSize: number;
   isRightBoard?: boolean;
   onCellClick?: (index: number) => void;
+  selectedCells: Set<number>;
 }
 
-const BoardGrid: React.FC<BoardGridProps> = ({ board, squareSize, boardSize, isRightBoard, onCellClick }) => {
-  const [selectedCells, setSelectedCells] = useState<Set<number>>(new Set());
-
+const BoardGrid: React.FC<BoardGridProps> = ({ 
+  board, 
+  squareSize, 
+  boardSize, 
+  isRightBoard, 
+  onCellClick,
+  selectedCells
+}) => {
   const handleCellClick = (index: number) => {
     if (isRightBoard && onCellClick) {
-      if (selectedCells.has(index)) {
-        setSelectedCells(prev => {
-          const newSet = new Set(prev);
-          newSet.delete(index);
-          return newSet;
-        });
-        const cellElement = document.getElementById(`right-cell-${index}`);
-        if (cellElement) {
-          cellElement.classList.remove('pulse-magenta');
-        }
-      } else if (selectedCells.size < 4) {
-        setSelectedCells(prev => {
-          const newSet = new Set(prev);
-          newSet.add(index);
-          return newSet;
-        });
-        const cellElement = document.getElementById(`right-cell-${index}`);
-        if (cellElement) {
-          cellElement.classList.add('pulse-magenta');
-        }
-      }
       onCellClick(index);
     }
   };

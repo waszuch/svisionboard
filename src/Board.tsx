@@ -34,10 +34,8 @@ const Board: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    if (leftBoard.length === 0 && rightBoard.length === 0) {
-      generateNewBoards(boardSize);
-    }
-  }, []);
+    generateNewBoards(boardSize);
+  }, [boardSize, differencesCount]);
 
   const resetGame = () => {
     setPlayerPicks(new Set());
@@ -105,12 +103,10 @@ const Board: React.FC = () => {
   const handleBoardSizeChange = (value: number[]) => {
     const size = value[0];
     setBoardSize(size);
-    generateNewBoards(size);
   };
 
   const handleDifferencesCountChange = (count: number) => {
     setDifferencesCount(count);
-    generateNewBoards(boardSize);
   };
 
   const squareSize = Math.min((windowWidth * 0.45) / boardSize, (windowHeight * 0.8) / boardSize);
@@ -162,13 +158,17 @@ const Board: React.FC = () => {
           </div>
           <div className="mt-4 flex flex-wrap justify-center">
             {[1, 2, 3, 4].map(count => (
-              <Button
-                key={count}
-                onClick={() => handleDifferencesCountChange(count)}
-                className={`m-2 px-3 py-1 text-sm cursor-pointer ${differencesCount === count ? 'bg-gray-800 dark:bg-gray-200' : 'bg-black dark:bg-white'} text-white dark:text-black rounded transition-colors duration-300 hover:bg-gray-800 dark:hover:bg-gray-200`}
-              >
+              <label key={count} className="m-2 px-3 py-1 text-sm cursor-pointer">
+                <input
+                  type="radio"
+                  name="differencesCount"
+                  value={count}
+                  checked={differencesCount === count}
+                  onChange={() => handleDifferencesCountChange(count)}
+                  className="mr-2"
+                />
                 {count}
-              </Button>
+              </label>
             ))}
           </div>
         </div>

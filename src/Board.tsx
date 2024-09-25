@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
 import "./style.css";
 import { generateBoards, BoardCell } from './utils/boardUtils';
-import BoardGrid from './components/BoardGrid';
+import BoardGrid from './components/board-grid';
 import { ThemeProvider } from "@/components/theme-provider"
 import { ModeToggle } from './components/mode-toggle';
 
@@ -12,26 +12,13 @@ const Board: React.FC = () => {
   const [differences, setDifferences] = useState<Set<string>>(new Set());
   const [leftBoard, setLeftBoard] = useState<BoardCell[]>([]);
   const [rightBoard, setRightBoard] = useState<BoardCell[]>([]);
-  const [windowWidth, setWindowWidth] = useState<number>(window.innerWidth);
-  const [windowHeight, setWindowHeight] = useState<number>(window.innerHeight);
   const [playerPicks, setPlayerPicks] = useState<Set<number>>(new Set());
   const [correctPicks, setCorrectPicks] = useState<Set<number>>(new Set());
   const [isDifferenceShown, setIsDifferenceShown] = useState(false);
   const [selectedCells, setSelectedCells] = useState<Set<number>>(new Set());
   const [differencesCount, setDifferencesCount] = useState<number>(1);
 
-  useEffect(() => {
-    const handleResize = () => {
-      setWindowWidth(window.innerWidth);
-      setWindowHeight(window.innerHeight);
-    };
-    window.addEventListener('resize', handleResize);
-    window.addEventListener('orientationchange', handleResize);
-    return () => {
-      window.removeEventListener('resize', handleResize);
-      window.removeEventListener('orientationchange', handleResize);
-    };
-  }, []);
+  const containerSize = 700; 
 
   useEffect(() => {
     generateNewBoards(boardSize);
@@ -109,7 +96,7 @@ const Board: React.FC = () => {
     setDifferencesCount(count);
   };
 
-  const squareSize = Math.min((windowWidth * 0.45) / boardSize, (windowHeight * 0.8) / boardSize);
+  const squareSize = containerSize / boardSize; 
 
   return (
     <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
@@ -117,16 +104,15 @@ const Board: React.FC = () => {
         <div className="absolute top-4 left-4 z-10">
           <ModeToggle />
         </div>
-        <div className="h-16"></div>
         <div className="flex flex-col items-center justify-center">
           <div className="flex flex-row gap-5 items-start justify-center">
-            <div className="flex flex-col items-center">
+            <div className="flex flex-col items-center" style={{ width: containerSize, height: containerSize }}>
               <BoardGrid board={leftBoard} squareSize={squareSize} boardSize={boardSize} selectedCells={new Set()} />
               <div className="mt-0">
                 <div className='calibration-dot'></div>
               </div>
             </div>
-            <div className="flex flex-col items-center">
+            <div className="flex flex-col items-center" style={{ width: containerSize, height: containerSize }}>
               <BoardGrid 
                 board={rightBoard} 
                 squareSize={squareSize} 
@@ -140,7 +126,7 @@ const Board: React.FC = () => {
               </div>
             </div>
           </div>
-          <div className="mt-4 w-full max-w-[calc(90%+20px)]">
+          <div className="mt-2 w-full max-w-[calc(90%+20px)]">
             <div className="text-center mb-2 text-black dark:text-white">
               {boardSize}x{boardSize}
             </div>
@@ -156,7 +142,7 @@ const Board: React.FC = () => {
             <p>Player Picks: {[...playerPicks].join(', ')}</p>
             <p>Correct Picks: {[...correctPicks].join(', ')}</p>
           </div>
-          <div className="mt-4 flex flex-wrap justify-center">
+          <div className="mt-0 flex flex-wrap justify-center">
             {[1, 2, 3, 4].map(count => (
               <label key={count} className="m-2 px-3 py-1 text-sm cursor-pointer">
                 <input
@@ -172,7 +158,7 @@ const Board: React.FC = () => {
             ))}
           </div>
         </div>
-        <div className="mt-5 flex flex-wrap justify-center">
+        <div className="mt-0 flex flex-wrap justify-center">
           <Button
             onClick={() => generateNewBoards(boardSize)}
             className="m-2 px-3 py-1 text-sm cursor-pointer bg-black dark:bg-white text-white dark:text-black rounded transition-colors duration-300 hover:bg-gray-800 dark:hover:bg-gray-200"

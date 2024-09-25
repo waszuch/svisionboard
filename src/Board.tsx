@@ -12,13 +12,26 @@ const Board: React.FC = () => {
   const [differences, setDifferences] = useState<Set<string>>(new Set());
   const [leftBoard, setLeftBoard] = useState<BoardCell[]>([]);
   const [rightBoard, setRightBoard] = useState<BoardCell[]>([]);
+  const [windowWidth, setWindowWidth] = useState<number>(window.innerWidth);
+  const [windowHeight, setWindowHeight] = useState<number>(window.innerHeight);
   const [playerPicks, setPlayerPicks] = useState<Set<number>>(new Set());
   const [correctPicks, setCorrectPicks] = useState<Set<number>>(new Set());
   const [isDifferenceShown, setIsDifferenceShown] = useState(false);
   const [selectedCells, setSelectedCells] = useState<Set<number>>(new Set());
   const [differencesCount, setDifferencesCount] = useState<number>(1);
 
-  const containerSize = 700; 
+  useEffect(() => {
+    const handleResize = () => {
+      setWindowWidth(window.innerWidth);
+      setWindowHeight(window.innerHeight);
+    };
+    window.addEventListener('resize', handleResize);
+    window.addEventListener('orientationchange', handleResize);
+    return () => {
+      window.removeEventListener('resize', handleResize);
+      window.removeEventListener('orientationchange', handleResize);
+    };
+  }, []);
 
   useEffect(() => {
     generateNewBoards(boardSize);
@@ -96,8 +109,8 @@ const Board: React.FC = () => {
     setDifferencesCount(count);
   };
 
-  const squareSize = containerSize / boardSize; 
-
+  const scaleFactor = 0.90; 
+    const squareSize = Math.min((windowWidth * 0.45) / boardSize, (windowHeight * 0.8) / boardSize) * scaleFactor;
   return (
     <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
       <div className="flex flex-col items-center justify-center min-h-screen bg-[#f0f4f8] dark:bg-black text-black dark:text-white font-sans p-4">
@@ -106,13 +119,13 @@ const Board: React.FC = () => {
         </div>
         <div className="flex flex-col items-center justify-center">
           <div className="flex flex-row gap-5 items-start justify-center">
-            <div className="flex flex-col items-center" style={{ width: containerSize, height: containerSize }}>
+            <div className="flex flex-col items-center">
               <BoardGrid board={leftBoard} squareSize={squareSize} boardSize={boardSize} selectedCells={new Set()} />
               <div className="mt-0">
                 <div className='calibration-dot'></div>
               </div>
             </div>
-            <div className="flex flex-col items-center" style={{ width: containerSize, height: containerSize }}>
+            <div className="flex flex-col items-center">
               <BoardGrid 
                 board={rightBoard} 
                 squareSize={squareSize} 
@@ -126,7 +139,7 @@ const Board: React.FC = () => {
               </div>
             </div>
           </div>
-          <div className="mt-2 w-full max-w-[calc(90%+20px)]">
+          <div className="mt-0 w-full max-w-[calc(90%+20px)]">
             <div className="text-center mb-2 text-black dark:text-white">
               {boardSize}x{boardSize}
             </div>

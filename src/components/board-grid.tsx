@@ -41,7 +41,7 @@ const BoardGrid: React.FC<BoardGridProps> = ({
   return (
     <div
       ref={gridRef}
-      className="grid"
+      className="grid board-grid"
       style={{
         gridTemplateColumns: `repeat(${boardSize}, ${squareSize}px)`,
         gridTemplateRows: `repeat(${boardSize}, ${squareSize}px)`,

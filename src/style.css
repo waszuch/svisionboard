@@ -1,6 +1,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
 @layer base {
   :root {
     --background: 0 0% 100%;
@@ -27,7 +28,7 @@
     --chart-3: 197 37% 24%;
     --chart-4: 43 74% 66%;
     --chart-5: 27 87% 67%;
-    --radius: 0.5rem
+    --radius: 0.5rem;
   }
   .dark {
     --background: 222.2 84% 4.9%;
@@ -53,9 +54,10 @@
     --chart-2: 160 60% 45%;
     --chart-3: 30 80% 55%;
     --chart-4: 280 65% 60%;
-    --chart-5: 340 75% 55%
+    --chart-5: 340 75% 55%;
   }
 }
+
 @layer base {
   * {
     @apply border-border;
@@ -77,8 +79,6 @@
   }
 }
 
-
-
 .pulse {
   animation: pulse 1s infinite;
   position: relative;
@@ -95,7 +95,8 @@
   border: 2px solid cyan;
   animation: pulse 1s infinite;
 }
-.calibration-dot{
+
+.calibration-dot {
   width: 30px;
   height: 30px;
   background-color: black;
@@ -111,7 +112,6 @@ button {
   background-color: #000;
   color: #fff;
 }
-
 
 html.dark body {
   background-color: #000; 
@@ -131,21 +131,21 @@ html.dark .bg-#f0f4f8 {
   background-color: #000; 
 }
 
-
 html.dark .board-size-dropdown, html.dark .generate-board, html.dark .show-difference {
   background-color: #fff; 
   color: #000; 
 }
 
-
 html.dark button:hover {
   background-color: #ccc;
   color: #000;
 }
-html.dark .calibration-dot{
-background-color: white;
+
+html.dark .calibration-dot {
+  background-color: white;
 }
-html.light button{
+
+html.light button {
   background-color: #000;
   color: #ccc;
 }
@@ -167,6 +167,7 @@ html.light button{
   position: relative;
   z-index: 1;
 }
+
 .pulse-magenta::after {
   content: '';
   position: absolute;
@@ -176,17 +177,37 @@ html.light button{
   bottom: -2px;
   border: 2px solid magenta;
   animation: pulse 1s infinite;
-  
 }
-
 
 .fixed-width-number {
   display: inline-block;
   width: 3.02em; 
   text-align: right;
 }
+
 .fixed-width-number-1 {
   display: inline-block;
   width: 3.15em; 
   text-align: right;
+}
+
+.board-container {
+  width: 100%;
+  max-width: 90vw;
+  height: 80vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+.board-grid {
+  transition: all 0.3s ease;
+  max-width: 100%;
+  max-height: 100%;
+}
+
+.board-square {
+  background-color: var(--square-color);
+  transition: width 0.2s, height 0.2s;
 }

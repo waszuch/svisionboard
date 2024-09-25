@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
 import "./style.css";
@@ -109,8 +109,15 @@ const Board: React.FC = () => {
     setDifferencesCount(count);
   };
 
-  const scaleFactor = 0.90; 
-    const squareSize = Math.min((windowWidth * 0.45) / boardSize, (windowHeight * 0.8) / boardSize) * scaleFactor;
+  const calculateSquareSize = useCallback(() => {
+    return Math.min(
+      (windowWidth * 0.45) / boardSize,
+      (windowHeight * 0.7) / boardSize
+    );
+  }, [windowWidth, windowHeight, boardSize]);
+
+  const squareSize = calculateSquareSize();
+
   return (
     <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
       <div className="flex flex-col items-center justify-center min-h-screen bg-[#f0f4f8] dark:bg-black text-black dark:text-white font-sans p-4">
@@ -118,24 +125,26 @@ const Board: React.FC = () => {
           <ModeToggle />
         </div>
         <div className="flex flex-col items-center justify-center">
-          <div className="flex flex-row gap-5 items-start justify-center">
-            <div className="flex flex-col items-center">
-              <BoardGrid board={leftBoard} squareSize={squareSize} boardSize={boardSize} selectedCells={new Set()} />
-              <div className="mt-0">
-                <div className='calibration-dot'></div>
+          <div className="board-container">
+            <div className="flex flex-row gap-5 items-start justify-center">
+              <div className="flex flex-col items-center">
+                <BoardGrid board={leftBoard} squareSize={squareSize} boardSize={boardSize} selectedCells={new Set()} />
+                <div className="mt-0">
+                  <div className='calibration-dot'></div>
+                </div>
               </div>
-            </div>
-            <div className="flex flex-col items-center">
-              <BoardGrid 
-                board={rightBoard} 
-                squareSize={squareSize} 
-                boardSize={boardSize} 
-                isRightBoard 
-                onCellClick={handleSquareClick}
-                selectedCells={selectedCells}
-              />
-              <div className="mt-0">
-                <div className='calibration-dot'></div>
+              <div className="flex flex-col items-center">
+                <BoardGrid 
+                  board={rightBoard} 
+                  squareSize={squareSize} 
+                  boardSize={boardSize} 
+                  isRightBoard 
+                  onCellClick={handleSquareClick}
+                  selectedCells={selectedCells}
+                />
+                <div className="mt-0">
+                  <div className='calibration-dot'></div>
+                </div>
               </div>
             </div>
           </div>

@@ -8,6 +8,7 @@ interface BoardGridProps {
   isRightBoard?: boolean;
   onCellClick?: (index: number) => void;
   selectedCells: Set<number>;
+  correctPicks: Set<number>;
 }
 
 const BoardGrid: React.FC<BoardGridProps> = ({ 
@@ -16,7 +17,8 @@ const BoardGrid: React.FC<BoardGridProps> = ({
   boardSize, 
   isRightBoard, 
   onCellClick,
-  selectedCells
+  selectedCells,
+  correctPicks  // Add this line
 }) => {
   const gridRef = useRef<HTMLDivElement>(null);
 
@@ -49,19 +51,24 @@ const BoardGrid: React.FC<BoardGridProps> = ({
     >
       {board.map((cell, index) => (
         <div
-          key={index}
-          id={isRightBoard ? `right-cell-${index}` : undefined}
-          className={`cell ${selectedCells.has(index) ? 'pulse-magenta' : ''}`}
-          style={{
-            width: squareSize,
-            height: squareSize,
-            backgroundColor: cell.color,
-            border: '1px solid black',
-          }}
-          onClick={() => handleCellClick(index)}
-        />
-      ))}
-    </div>
+        key={index}
+    id={isRightBoard ? `right-cell-${index}` : undefined}
+    className={`cell ${
+      selectedCells.has(index) && !correctPicks.has(index + 1)
+        ? 'pulse-magenta'
+        : correctPicks.has(index + 1) && selectedCells.has(index)
+        ? 'pulse-correct correct-pick'
+        : ''
+    }`}
+    style={{
+      width: squareSize,
+      height: squareSize,
+      backgroundColor: cell.color,
+      border: '1px solid black',
+    }}
+    onClick={() => handleCellClick(index)}
+  />
+      ))}    </div>
   );
 };
 

@@ -89,10 +89,14 @@ const Board: React.FC = () => {
         if (animatedCell) {
           if (!isDifferenceShown) {
             setCorrectPicks(prev => new Set(prev).add(index + 1));
-            animatedCell.classList.add('pulse');
+            if (playerPicks.has(index + 1)) {
+              animatedCell.classList.add('pulse-correct', 'correct-pick');
+            } else {
+              animatedCell.classList.add('pulse');
+            }
           } else {
             setCorrectPicks(new Set());
-            animatedCell.classList.remove('pulse');
+            animatedCell.classList.remove('pulse', 'pulse-correct', 'correct-pick');
           }
         }
       });
@@ -128,7 +132,7 @@ const Board: React.FC = () => {
           <div className="board-container">
             <div className="flex flex-row gap-5 items-start justify-center">
               <div className="flex flex-col items-center">
-                <BoardGrid board={leftBoard} squareSize={squareSize} boardSize={boardSize} selectedCells={new Set()} />
+                <BoardGrid board={leftBoard} squareSize={squareSize} boardSize={boardSize} selectedCells={new Set()} correctPicks={correctPicks} />
                 <div className="mt-0">
                   <div className='calibration-dot'></div>
                 </div>
@@ -141,6 +145,7 @@ const Board: React.FC = () => {
                   isRightBoard 
                   onCellClick={handleSquareClick}
                   selectedCells={selectedCells}
+                  correctPicks={correctPicks}
                 />
                 <div className="mt-0">
                   <div className='calibration-dot'></div>
@@ -202,5 +207,4 @@ const Board: React.FC = () => {
     </ThemeProvider>
   );
 };
-
 export default Board;

@@ -165,7 +165,7 @@ html.light button {
 .pulse-magenta {
   animation: pulse 1s infinite;
   position: relative;
-  z-index: 1;
+  z-index: 2;
 }
 
 .pulse-magenta::after {
@@ -210,4 +210,34 @@ html.light button {
 .board-square {
   background-color: var(--square-color);
   transition: width 0.2s, height 0.2s;
+}
+
+@keyframes pulse-correct {
+  0% {
+    box-shadow: 0 0 0 0 rgba(220, 220, 220, 0.7);
+  }
+  50% {
+    box-shadow: 0 0 0 10px rgba(220, 220, 220, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(220, 220, 220, 0);
+  }
+}
+
+.pulse-correct {
+  animation: pulse-correct 0.5s infinite;
+  position: relative;
+  z-index: 3;
+  border: 2px solid #DCDCDC !important;
+}
+
+.pulse-correct::after {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  border: 2px solid #DCDCDC;
+  animation: pulse-correct 0.5s infinite;
 }

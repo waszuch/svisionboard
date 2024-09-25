@@ -152,8 +152,12 @@ const Board: React.FC = () => {
             />
           </div>
           <div className="mt-4 text-black dark:text-white text-left w-full max-w-[calc(90%+20px)]">
-            <p>Player Picks: {[...playerPicks].join(', ')}</p>
-            <p>Correct Picks: {[...correctPicks].join(', ')}</p>
+            <p>Player Picks: {[...playerPicks].sort((a, b) => a - b).map(pick => (
+              <span key={pick} className="fixed-width-number-1">{pick}</span>
+            ))}</p>
+            <p>Correct Picks: {[...correctPicks].sort((a, b) => a - b).map(pick => (
+              <span key={pick} className="fixed-width-number">{pick}</span>
+            ))}</p>
           </div>
           <div className="mt-0 flex flex-wrap justify-center">
             {[1, 2, 3, 4].map(count => (

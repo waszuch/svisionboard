@@ -179,3 +179,14 @@ html.light button{
   
 }
 
+
+.fixed-width-number {
+  display: inline-block;
+  width: 3.02em; 
+  text-align: right;
+}
+.fixed-width-number-1 {
+  display: inline-block;
+  width: 3.15em; 
+  text-align: right;
+}

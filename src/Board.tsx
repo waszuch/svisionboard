@@ -124,7 +124,7 @@ const Board: React.FC = () => {
 
   return (
     <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
-      <div className="flex flex-col items-center justify-center min-h-screen bg-[#f0f4f8] dark:bg-black text-black dark:text-white font-sans p-4">
+      <div className="flex flex-col items-center justify-center min-h-screen bg-slate-300 dark:bg-stone-900 text-black dark:text-white font-sans p-4">
         <div className="absolute top-4 left-4 z-10">
           <ModeToggle />
         </div>
@@ -165,7 +165,7 @@ const Board: React.FC = () => {
               onValueChange={handleBoardSizeChange}
             />
           </div>
-          <div className="mt-4 text-black dark:text-white text-left w-full max-w-[calc(90%+20px)]">
+          <div className="mt-0 text-black dark:text-white text-left w-full max-w-[calc(90%+20px)]">
             <p>Player Picks: {[...playerPicks].sort((a, b) => a - b).map(pick => (
               <span key={pick} className="fixed-width-number-1">{pick}</span>
             ))}</p>
@@ -192,13 +192,13 @@ const Board: React.FC = () => {
         <div className="mt-0 flex flex-wrap justify-center">
           <Button
             onClick={() => generateNewBoards(boardSize)}
-            className="m-2 px-3 py-1 text-sm cursor-pointer bg-black dark:bg-white text-white dark:text-black rounded transition-colors duration-300 hover:bg-gray-800 dark:hover:bg-gray-200"
+            className="m-2 px-3 py-1 text-sm cursor-pointer bg-black dark:bg-white text-white dark:text-black rounded-lg transition-colors duration-300 hover:bg-gray-800 dark:hover:bg-gray-200"
           >
             Generate Board
           </Button>
           <Button
             onClick={toggleDifference}
-            className="m-2 px-3 py-1 text-sm cursor-pointer bg-black dark:bg-white text-white dark:text-black rounded transition-colors duration-300 hover:bg-gray-800 dark:hover:bg-gray-200"
+            className="m-2 px-3 py-1 text-sm cursor-pointer bg-black dark:bg-white text-white dark:text-black rounded-lg transition-colors duration-300 hover:bg-gray-800 dark:hover:bg-gray-200"
           >
             {isDifferenceShown ? 'Hide Difference' : 'Show Difference'}
           </Button>

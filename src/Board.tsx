@@ -112,15 +112,13 @@ const Board: React.FC = () => {
   };
 
   const calculateSquareSize = useCallback(() => {
-    const isPortrait = windowHeight > windowWidth;
-    const availableWidth = isPortrait ? windowWidth * 0.9 : windowWidth * 0.45;
+    const availableWidth = windowWidth * 0.9;
     const availableHeight = windowHeight * 0.7;
     return Math.floor(Math.min(
-      availableWidth / boardSize,
+      availableWidth / (boardSize * 2),
       availableHeight / boardSize
     ));
   }, [windowWidth, windowHeight, boardSize]);
-
   const squareSize = calculateSquareSize();
 
   return (
@@ -130,7 +128,7 @@ const Board: React.FC = () => {
           <ModeToggle />
         </div>
         <div className="flex flex-col items-center justify-center">
-          <div className="board-container flex flex-col sm:flex-row gap-5 items-center justify-center">
+          <div className="board-container flex flex-row gap-5 items-center justify-center">
             <div className="flex flex-col items-center">
               <BoardGrid board={leftBoard} squareSize={squareSize} boardSize={boardSize} selectedCells={new Set()} correctPicks={correctPicks} />
               <div className="mt-0">

@@ -118,9 +118,10 @@ const Board: React.FC = () => {
     if (isPortrait) {
       const availableWidth = windowWidth * 0.96; // 96% of screen width for both boards
       const singleBoardWidth = availableWidth / 2; // Divide by 2 for two boards
+      const singleBoardHeight = windowHeight * 0.35; // 35% of screen height for each board
       return Math.min(
         singleBoardWidth / boardSize,
-        (windowHeight * 0.35) / boardSize
+        singleBoardHeight / boardSize
       );
     } else {
       return Math.min(

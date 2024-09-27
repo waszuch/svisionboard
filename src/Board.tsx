@@ -21,15 +21,13 @@ const Board: React.FC = () => {
   const [differencesCount, setDifferencesCount] = useState<number>(1);
 
   useEffect(() => {
-    const handleResize = () => {
+    const handleOrientationChange = () => {
       setWindowWidth(window.innerWidth);
       setWindowHeight(window.innerHeight);
     };
-    window.addEventListener('resize', handleResize);
-    window.addEventListener('orientationchange', handleResize);
+    window.addEventListener('orientationchange', handleOrientationChange);
     return () => {
-      window.removeEventListener('resize', handleResize);
-      window.removeEventListener('orientationchange', handleResize);
+      window.removeEventListener('orientationchange', handleOrientationChange);
     };
   }, []);
 
@@ -114,10 +112,13 @@ const Board: React.FC = () => {
   };
 
   const calculateSquareSize = useCallback(() => {
-    return Math.min(
-      (windowWidth * 0.45) / boardSize,
-      (windowHeight * 0.7) / boardSize
-    );
+    const isPortrait = windowHeight > windowWidth;
+    const availableWidth = isPortrait ? windowWidth * 0.9 : windowWidth * 0.45;
+    const availableHeight = windowHeight * 0.7;
+    return Math.floor(Math.min(
+      availableWidth / boardSize,
+      availableHeight / boardSize
+    ));
   }, [windowWidth, windowHeight, boardSize]);
 
   const squareSize = calculateSquareSize();
@@ -129,27 +130,25 @@ const Board: React.FC = () => {
           <ModeToggle />
         </div>
         <div className="flex flex-col items-center justify-center">
-          <div className="board-container">
-            <div className="flex flex-row gap-5 items-start justify-center">
-              <div className="flex flex-col items-center">
-                <BoardGrid board={leftBoard} squareSize={squareSize} boardSize={boardSize} selectedCells={new Set()} correctPicks={correctPicks} />
-                <div className="mt-0">
-                  <div className='calibration-dot'></div>
-                </div>
+          <div className="board-container flex flex-col sm:flex-row gap-5 items-center justify-center">
+            <div className="flex flex-col items-center">
+              <BoardGrid board={leftBoard} squareSize={squareSize} boardSize={boardSize} selectedCells={new Set()} correctPicks={correctPicks} />
+              <div className="mt-0">
+                <div className='calibration-dot'></div>
               </div>
-              <div className="flex flex-col items-center">
-                <BoardGrid 
-                  board={rightBoard} 
-                  squareSize={squareSize} 
-                  boardSize={boardSize} 
-                  isRightBoard 
-                  onCellClick={handleSquareClick}
-                  selectedCells={selectedCells}
-                  correctPicks={correctPicks}
-                />
-                <div className="mt-0">
-                  <div className='calibration-dot'></div>
-                </div>
+            </div>
+            <div className="flex flex-col items-center">
+              <BoardGrid 
+                board={rightBoard} 
+                squareSize={squareSize} 
+                boardSize={boardSize} 
+                isRightBoard 
+                onCellClick={handleSquareClick}
+                selectedCells={selectedCells}
+                correctPicks={correctPicks}
+              />
+              <div className="mt-0">
+                <div className='calibration-dot'></div>
               </div>
             </div>
           </div>

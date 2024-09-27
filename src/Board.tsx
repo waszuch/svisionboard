@@ -165,7 +165,7 @@ const Board: React.FC = () => {
               onValueChange={handleBoardSizeChange}
             />
           </div>
-          <div className="mt-0 text-black dark:text-white text-left w-full max-w-[calc(90%+20px)]">
+          <div className="mt-1 text-black dark:text-white text-left w-full max-w-[calc(90%+20px)]">
             <p>Player Picks: {[...playerPicks].sort((a, b) => a - b).map(pick => (
               <span key={pick} className="fixed-width-number-1">{pick}</span>
             ))}</p>

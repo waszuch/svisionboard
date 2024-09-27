@@ -21,13 +21,15 @@ const Board: React.FC = () => {
   const [differencesCount, setDifferencesCount] = useState<number>(1);
 
   useEffect(() => {
-    const handleOrientationChange = () => {
+    const handleResize = () => {
       setWindowWidth(window.innerWidth);
       setWindowHeight(window.innerHeight);
     };
-    window.addEventListener('orientationchange', handleOrientationChange);
+    window.addEventListener('resize', handleResize);
+    window.addEventListener('orientationchange', handleResize);
     return () => {
-      window.removeEventListener('orientationchange', handleOrientationChange);
+      window.removeEventListener('resize', handleResize);
+      window.removeEventListener('orientationchange', handleResize);
     };
   }, []);
 
@@ -112,14 +114,23 @@ const Board: React.FC = () => {
   };
 
   const calculateSquareSize = useCallback(() => {
-    const margin = 20; // Dodajemy margines
-    const availableWidth = windowWidth - margin;
-    const availableHeight = windowHeight * 0.7;
-    return Math.floor(Math.min(
-      availableWidth / (boardSize * 2),
-      availableHeight / boardSize
-    ));
-  }, [windowWidth, windowHeight, boardSize]);  const squareSize = calculateSquareSize();
+    const aspectRatio = windowWidth / windowHeight;
+    const isPortrait = aspectRatio < 1;
+    
+    if (isPortrait) {
+      return Math.min(
+        (windowWidth * 0.9) / boardSize,
+        (windowHeight * 0.35) / boardSize
+      );
+    } else {
+      return Math.min(
+        (windowWidth * 0.45) / boardSize,
+        (windowHeight * 0.7) / boardSize
+      );
+    }
+  }, [windowWidth, windowHeight, boardSize]);
+
+  const squareSize = calculateSquareSize();
 
   return (
     <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
@@ -128,25 +139,27 @@ const Board: React.FC = () => {
           <ModeToggle />
         </div>
         <div className="flex flex-col items-center justify-center">
-          <div className="board-container flex flex-row gap-2 sm:gap-5 items-center justify-center scale-90 sm:scale-100">
-            <div className="flex flex-col items-center">
-              <BoardGrid board={leftBoard} squareSize={squareSize} boardSize={boardSize} selectedCells={new Set()} correctPicks={correctPicks} />
-              <div className="mt-0">
-                <div className='calibration-dot'></div>
+          <div className="board-container">
+            <div className={`flex ${windowWidth < windowHeight ? 'flex-col' : 'flex-row'} gap-5 items-center justify-center`}>
+              <div className="flex flex-col items-center">
+                <BoardGrid board={leftBoard} squareSize={squareSize} boardSize={boardSize} selectedCells={new Set()} correctPicks={correctPicks} />
+                <div className="mt-0">
+                  <div className='calibration-dot'></div>
+                </div>
               </div>
-            </div>
-            <div className="flex flex-col items-center">
-              <BoardGrid 
-                board={rightBoard} 
-                squareSize={squareSize} 
-                boardSize={boardSize} 
-                isRightBoard 
-                onCellClick={handleSquareClick}
-                selectedCells={selectedCells}
-                correctPicks={correctPicks}
-              />
-              <div className="mt-0">
-                <div className='calibration-dot'></div>
+              <div className="flex flex-col items-center">
+                <BoardGrid 
+                  board={rightBoard} 
+                  squareSize={squareSize} 
+                  boardSize={boardSize} 
+                  isRightBoard 
+                  onCellClick={handleSquareClick}
+                  selectedCells={selectedCells}
+                  correctPicks={correctPicks}
+                />
+                <div className="mt-0">
+                  <div className='calibration-dot'></div>
+                </div>
               </div>
             </div>
           </div>

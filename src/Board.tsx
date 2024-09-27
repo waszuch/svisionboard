@@ -114,24 +114,14 @@ const Board: React.FC = () => {
   };
 
   const calculateSquareSize = useCallback(() => {
-    const isPortrait = windowWidth < windowHeight;
-    if (isPortrait) {
-      const availableWidth = windowWidth * 0.96; // 96% of screen width for both boards
-      const singleBoardWidth = availableWidth / 2; // Divide by 2 for two boards
-      const singleBoardHeight = windowHeight * 0.35; // 35% of screen height for each board
-      return Math.min(
-        singleBoardWidth / boardSize,
-        singleBoardHeight / boardSize
-      );
-    } else {
-      return Math.min(
-        (windowWidth * 0.45) / boardSize,
-        (windowHeight * 0.7) / boardSize
-      );
-    }
+    return Math.min(
+      (windowWidth * 0.45) / boardSize,
+      (windowHeight * 0.7) / boardSize
+    );
   }, [windowWidth, windowHeight, boardSize]);
 
   const squareSize = calculateSquareSize();
+
   return (
     <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
       <div className="flex flex-col items-center justify-center min-h-screen bg-slate-300 dark:bg-stone-900 text-black dark:text-white font-sans p-4">

@@ -114,12 +114,10 @@ const Board: React.FC = () => {
   };
 
   const calculateSquareSize = useCallback(() => {
-    const aspectRatio = windowWidth / windowHeight;
-    const isPortrait = aspectRatio < 1;
-    
+    const isPortrait = windowWidth < windowHeight;
     if (isPortrait) {
       return Math.min(
-        (windowWidth * 0.9) / boardSize,
+        (windowWidth * 0.45) / boardSize,
         (windowHeight * 0.35) / boardSize
       );
     } else {
@@ -129,7 +127,6 @@ const Board: React.FC = () => {
       );
     }
   }, [windowWidth, windowHeight, boardSize]);
-
   const squareSize = calculateSquareSize();
 
   return (
@@ -140,7 +137,7 @@ const Board: React.FC = () => {
         </div>
         <div className="flex flex-col items-center justify-center">
           <div className="board-container">
-            <div className={`flex ${windowWidth < windowHeight ? 'flex-col' : 'flex-row'} gap-5 items-center justify-center`}>
+            <div className="flex flex-row gap-5 items-start justify-center">
               <div className="flex flex-col items-center">
                 <BoardGrid board={leftBoard} squareSize={squareSize} boardSize={boardSize} selectedCells={new Set()} correctPicks={correctPicks} />
                 <div className="mt-0">

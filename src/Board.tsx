@@ -112,14 +112,14 @@ const Board: React.FC = () => {
   };
 
   const calculateSquareSize = useCallback(() => {
-    const availableWidth = windowWidth * 0.9;
+    const margin = 20; // Dodajemy margines
+    const availableWidth = windowWidth - margin;
     const availableHeight = windowHeight * 0.7;
     return Math.floor(Math.min(
       availableWidth / (boardSize * 2),
       availableHeight / boardSize
     ));
-  }, [windowWidth, windowHeight, boardSize]);
-  const squareSize = calculateSquareSize();
+  }, [windowWidth, windowHeight, boardSize]);  const squareSize = calculateSquareSize();
 
   return (
     <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
@@ -128,7 +128,7 @@ const Board: React.FC = () => {
           <ModeToggle />
         </div>
         <div className="flex flex-col items-center justify-center">
-          <div className="board-container flex flex-row gap-5 items-center justify-center">
+          <div className="board-container flex flex-row gap-2 sm:gap-5 items-center justify-center scale-90 sm:scale-100">
             <div className="flex flex-col items-center">
               <BoardGrid board={leftBoard} squareSize={squareSize} boardSize={boardSize} selectedCells={new Set()} correctPicks={correctPicks} />
               <div className="mt-0">

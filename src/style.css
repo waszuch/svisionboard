@@ -241,3 +241,6 @@ html.light button {
   border: 2px solid #DCDCDC;
   animation: pulse-correct 0.5s infinite;
 }
+.rounded-font {
+  font-family: 'Nunito', sans-serif;
+}

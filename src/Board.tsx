@@ -124,7 +124,7 @@ const Board: React.FC = () => {
 
   return (
     <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
-      <div className="flex flex-col items-center justify-center min-h-screen bg-slate-300 dark:bg-stone-900 text-black dark:text-white font-sans p-4">
+      <div className="flex flex-col items-center justify-center min-h-screen bg-fuchsia-300 dark:bg-stone-900 text-black dark:text-white font-sans p-4">
         <div className="absolute top-4 left-4 z-10">
           <ModeToggle />
         </div>
@@ -154,7 +154,7 @@ const Board: React.FC = () => {
             </div>
           </div>
           <div className="mt-0 w-full max-w-[calc(90%+20px)]">
-            <div className="text-center mb-2 text-black dark:text-white">
+            <div className="text-center mb-1 text-black dark:text-white text-lg rounded-font ">
               {boardSize}x{boardSize}
             </div>
             <Slider
@@ -163,9 +163,10 @@ const Board: React.FC = () => {
               step={1}
               value={[boardSize]}
               onValueChange={handleBoardSizeChange}
+          
             />
           </div>
-          <div className="mt-1 text-black dark:text-white text-left w-full max-w-[calc(90%+20px)]">
+          <div className="mt-3 text-black dark:text-white text-left w-full max-w-[calc(90%+20px)] text-lg rounded-font">
             <p>Player Picks: {[...playerPicks].sort((a, b) => a - b).map(pick => (
               <span key={pick} className="fixed-width-number-1">{pick}</span>
             ))}</p>
@@ -183,6 +184,7 @@ const Board: React.FC = () => {
                   checked={differencesCount === count}
                   onChange={() => handleDifferencesCountChange(count)}
                   className="mr-2"
+                  
                 />
                 {count}
               </label>
